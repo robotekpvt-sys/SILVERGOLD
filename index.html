@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold & Silver - Premium Edition</title>
-    <!-- Firebase Legacy SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
@@ -25,6 +24,12 @@
         .phone-container { width: 100%; max-width: 390px; background: var(--panel-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; min-height: 580px; }
         .view-section { display: none; padding: 25px 20px; }
         .view-section.active { display: block; }
+        
+        /* Auth Screen Custom Style */
+        .auth-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; background: rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; }
+        .auth-tab-btn { flex: 1; padding: 14px; background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 15px; }
+        .auth-tab-btn.active { color: var(--gold); background: rgba(255,255,255,0.03); border-bottom: 2px solid var(--gold); }
+
         .custom-input { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 16px; outline: none; }
         .custom-input:focus { border-color: var(--gold); }
         .primary-btn { width: 100%; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; background: linear-gradient(135deg, #ffe066, #f5af19); color: #3b2300; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); }
@@ -52,15 +57,20 @@
 <body>
 
 <div class="phone-container">
-    <!-- View 1: Auth Screen -->
     <div id="authView" class="view-section active">
-        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold);">LOGIN / REGISTER</h2>
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold); font-weight: 800;">SILVERGOLD</h2>
+        
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuthMode('login')">LOGIN</button>
+            <button class="auth-tab-btn" id="tabSignup" onclick="toggleAuthMode('signup')">SIGN UP</button>
+        </div>
+
         <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
         <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
-        <button class="primary-btn" onclick="userLogin()">Start Playing</button>
+        
+        <button class="primary-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Log In</button>
     </div>
 
-    <!-- View 2: Main Dashboard -->
     <div id="mainView" style="display: none; flex-direction: column; height: 100%; flex: 1;">
         <div class="game-header">
             <h3 id="userTitle">PLAYER</h3>
@@ -70,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Tab 1: Play -->
         <div id="gameTab" class="view-section active">
             <div class="coin-box">
                 <div class="coin-element" id="gameCoin">
@@ -87,7 +96,6 @@
             <div class="status-box" id="resultMsg">Enter bet and Spin!</div>
         </div>
 
-        <!-- Tab 2: Deposit -->
         <div id="depositTab" class="view-section">
             <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">DEPOSIT MONEY</h3>
             <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff;">yourupi@ybl</b></p>
@@ -96,7 +104,6 @@
             <button class="primary-btn" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
-        <!-- Tab 3: Withdraw (NEW) -->
         <div id="withdrawTab" class="view-section">
             <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">WITHDRAW MONEY</h3>
             <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">*न्यूनतम निकासी राशि ₹100 है।</p>
@@ -105,7 +112,6 @@
             <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff;" onclick="requestWithdraw()">Request Withdrawal</button>
         </div>
 
-        <!-- Navigation Bar -->
         <div class="navigation-bar">
             <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
             <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">💰 Deposit</button>
@@ -132,19 +138,58 @@
     let userBalance = 0;
     let selectedChoice = "Gold";
     let isSpinning = false;
+    let authMode = "login"; // Default Mode
 
-    function userLogin() {
+    function toggleAuthMode(mode) {
+        authMode = mode;
+        document.getElementById('tabLogin').classList.remove('active');
+        document.getElementById('tabSignup').classList.remove('active');
+        
+        if (mode === 'login') {
+            document.getElementById('tabLogin').classList.add('active');
+            document.getElementById('authSubmitBtn').innerText = "Log In";
+        } else {
+            document.getElementById('tabSignup').classList.add('active');
+            document.getElementById('authSubmitBtn').innerText = "Sign Up (Register)";
+        }
+    }
+
+    function handleAuthSubmit() {
         const username = document.getElementById('usernameInput').value.trim().toLowerCase();
         const password = document.getElementById('passwordInput').value.trim();
-        if (!username || username.length < 3 || !password || password.length < 4) { alert("Invalid inputs!"); return; }
-        currentUser = username;
 
-        database.ref('users/' + currentUser).once('value', snapshot => {
-            if (!snapshot.exists()) {
-                database.ref('users/' + currentUser).set({ password: password, balance: 50 }).then(() => { enterApp(); });
+        if (!username || username.length < 3 || !password || password.length < 4) {
+            alert("कृपया सही यूजरनेम (min 3 अक्षर) और पासवर्ड (min 4 अक्षर) डालें!");
+            return;
+        }
+
+        database.ref('users/' + username).once('value', snapshot => {
+            if (authMode === 'signup') {
+                // Sign Up Logic
+                if (snapshot.exists()) {
+                    alert("यह यूजरनेम पहले से मौजूद है! कृपया दूसरा चुनें या लॉगिन करें।");
+                } else {
+                    database.ref('users/' + username).set({
+                        password: password,
+                        balance: 50 // नया अकाउंट बनाने पर ₹50 वेलकम बोनस
+                    }).then(() => {
+                        currentUser = username;
+                        alert("अकाउंट सफलतापूर्वक बन गया! ₹50 बोनस ऐड कर दिया गया है।");
+                        enterApp();
+                    });
+                }
             } else {
-                if (snapshot.val().password === password) { enterApp(); } 
-                else { alert("Wrong Password!"); }
+                // Login Logic
+                if (!snapshot.exists()) {
+                    alert("यह यूजरनेम मौजूद नहीं है! पहले SIGN UP करें।");
+                } else {
+                    if (snapshot.val().password === password) {
+                        currentUser = username;
+                        enterApp();
+                    } else {
+                        alert("गलत पासवर्ड! कृपया सही पासवर्ड डालें।");
+                    }
+                }
             }
         });
     }
@@ -198,10 +243,9 @@
         if (upi.length < 5 || !upi.includes('@')) { alert("Enter valid UPI ID!"); return; }
         if (amt > userBalance) { alert("Insufficient balance!"); return; }
 
-        // Deduct balance immediately for safety
         database.ref('users/' + currentUser).update({ balance: userBalance - amt }).then(() => {
             database.ref('withdrawRequests').push().set({ username: currentUser, amount: amt, upi: upi, status: 'pending', timestamp: Date.now() })
-            .then(() => { alert("Withdraw request submitted successfully!"); document.getElementById('witAmount').value = ''; document.getElementById('witUpi').value = ''; });
+            .then(() => { alert("Withdraw request submitted!"); document.getElementById('witAmount').value = ''; document.getElementById('witUpi').value = ''; });
         });
     }
 
