@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold & Silver - Local Test Mode</title>
+    <title>Gold & Silver - Play Premium</title>
+    <!-- Firebase Legacy SDKs for Easy CDN Integration -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
             --bg-color: #0b1528;
@@ -19,7 +22,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
         .phone-container { width: 100%; max-width: 410px; background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 2px solid #1e2f4d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .header { padding: 20px; text-align: center; border-bottom: 1px solid #1e2f4d; }
-        .header h1 { font-size: 24px; background: linear-gradient(90deg, #FFD700, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header h1 { font-size: 24px; background: linear-gradient(90deg, #FFD700, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
         .balance-card { background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
         .balance-amount { font-size: 20px; color: var(--gold); font-weight: bold; }
         .game-area, .auth-area, .wallet-area { padding: 20px; display: none; text-align: center; }
@@ -31,44 +34,42 @@
         .coin-silver { background: var(--silver-gradient); color: #2b2b2b; border-color: #f0f0f0; transform: rotateY(180deg); }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .choice-btn { padding: 12px; font-size: 15px; font-weight: bold; border-radius: 10px; border: 2px solid transparent; cursor: pointer; background: rgba(255, 255, 255, 0.05); color: #fff; }
-        .choice-btn.gold-btn.active { background: var(--gold-gradient); color: #4a2f00; border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
-        .choice-btn.silver-btn.active { background: var(--silver-gradient); color: #2b2b2b; border-color: var(--silver); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
+        .choice-btn.gold-btn.active { background: var(--gold-gradient); color: #4a2f00; border-color: var(--gold); }
+        .choice-btn.silver-btn.active { background: var(--silver-gradient); color: #2b2b2b; border-color: var(--silver); }
         .bet-input, .auth-input { width: 100%; background: #0d1a30; border: 1px solid #1e2f4d; border-radius: 10px; padding: 12px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 15px; outline: none; }
         .action-btn { width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; background: var(--gold-gradient); color: #4a2f00; text-transform: uppercase; }
-        .action-btn:disabled { background: #202d44; color: #4f5f75; cursor: not-allowed; }
+        .action-btn:disabled { background: #202d44; color: #4f5f75; }
         .result-message { margin-top: 15px; font-weight: bold; min-height: 24px; }
         .win-text { color: var(--accent-green); }
         .lose-text { color: #ff3d00; }
         .nav-tabs { display: flex; border-top: 1px solid #1e2f4d; background: #0d1a30; }
         .tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #8fa0bc; font-weight: bold; cursor: pointer; }
         .tab-btn.active { color: var(--gold); border-top: 2px solid var(--gold); }
-        
-        /* Local Test Admin Controls Style */
-        .local-admin { margin-top: 20px; border-top: 1px dashed #1e2f4d; padding-top: 15px; text-align: left; }
-        .admin-title { font-size: 11px; color: #586f91; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; text-align: center;}
-        .admin-flex { display: flex; gap: 5px; }
-        .adm-btn { flex: 1; padding: 6px; font-size: 11px; background: #0d1a30; border: 1px solid #1e2f4d; color: #8fa0bc; border-radius: 5px; cursor: pointer; font-weight: bold;}
-        .adm-btn.active { background: #ff3d00; color: #fff; border-color: #ff3d00; }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
+    <!-- Secure Auth Screen -->
     <div id="authScreen" class="auth-area active-screen">
-        <h2 style="margin-bottom: 20px; color: var(--gold); font-weight: 800;">GOLD & SILVER</h2>
-        <input type="text" id="usernameInput" class="auth-input" placeholder="Enter Username (e.g. rahul)">
+        <h2 style="margin-bottom: 20px; color: var(--gold); font-weight: 800;">LOGIN / REGISTER</h2>
+        <input type="text" id="usernameInput" class="auth-input" placeholder="Enter Username">
+        <input type="password" id="passwordInput" class="auth-input" placeholder="Enter Password">
         <button class="action-btn" onclick="userLogin()">Start Playing</button>
+        <p style="font-size: 11px; color: #8fa0bc; margin-top: 12px;">*अगर यूजरनेम नया है, तो यही आपका पासवर्ड बन जाएगा।</p>
     </div>
 
+    <!-- Main Live App -->
     <div id="mainApp" style="display: none;">
         <div class="header">
-            <h1 id="userTitle">PLAYER</h1>
+            <h1 id="userTitle">GOLD & SILVER</h1>
             <div class="balance-card">
                 <span>WALLET BALANCE</span>
-                <span class="balance-amount">₹<span id="userBalance">1000.00</span></span>
+                <span class="balance-amount">₹<span id="userBalance">0.00</span></span>
             </div>
         </div>
 
+        <!-- Tab 1: Play Dashboard -->
         <div id="gameTab" class="game-area active-screen">
             <div class="coin-wrapper">
                 <div class="coin" id="gameCoin">
@@ -76,33 +77,25 @@
                     <div class="coin-face coin-silver">SILVER</div>
                 </div>
             </div>
-            
             <div class="btn-group">
                 <button class="choice-btn gold-btn active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
                 <button class="choice-btn silver-btn" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
             </div>
-            
             <input type="number" class="bet-input" id="betAmount" value="50" min="10">
             <button class="action-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
-            <div class="result-message" id="resultMsg">Choose Gold/Silver & Spin!</div>
-
-            <div class="local-admin">
-                <div class="admin-title">⚙️ Local Admin Control (For Testing Only)</div>
-                <div class="admin-flex">
-                    <button class="adm-btn" id="admGold" onclick="setLocalForce('Gold')">Force Gold</button>
-                    <button class="adm-btn" id="admSilver" onclick="setLocalForce('Silver')">Force Silver</button>
-                    <button class="adm-btn active" id="admAuto" onclick="setLocalForce('Auto')">Normal (50/50)</button>
-                </div>
-            </div>
+            <div class="result-message" id="resultMsg">Enter bet and Spin!</div>
         </div>
 
+        <!-- Tab 2: Wallet Dashboard (Live Deposit) -->
         <div id="walletTab" class="wallet-area">
-            <h3 style="color: var(--gold); margin-bottom: 10px;">ADD MONEY SIMULATOR</h3>
-            <p style="font-size: 13px; color: #8fa0bc; margin-bottom: 15px;">लोकल मोड में आप यहाँ सीधे डमी मनी ऐड कर सकते हैं।</p>
-            <input type="number" id="dummyDepAmt" class="bet-input" value="500" placeholder="Amount">
-            <button class="action-btn" onclick="addDummyMoney()">Add Instantly</button>
+            <h3 style="color: var(--gold); margin-bottom: 10px;">ADD MONEY (UPI)</h3>
+            <p style="font-size: 13px; color: #8fa0bc; margin-bottom: 15px;">Pay on UPI ID: <b style="color: #fff;">yourupi@ybl</b></p>
+            <input type="number" id="depAmount" class="bet-input" placeholder="Amount Paid (₹)">
+            <input type="text" id="depUtr" class="bet-input" placeholder="12 Digit UTR / Reference No.">
+            <button class="action-btn" style="background: var(--silver-gradient); color: #000;" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
+        <!-- App Bottom Navigation -->
         <div class="nav-tabs">
             <button class="tab-btn active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
             <button class="tab-btn" id="btnWalletTab" onclick="switchTab('wallet')">💰 Wallet</button>
@@ -111,25 +104,62 @@
 </div>
 
 <script>
+    // Live Firebase Config Connected 
+    const firebaseConfig = {
+        apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
+        authDomain: "silvergold-dbe2f.firebaseapp.com",
+        databaseURL: "https://silvergold-dbe2f-default-rtdb.firebaseio.com",
+        projectId: "silvergold-dbe2f",
+        storageBucket: "silvergold-dbe2f.firebasestorage.app",
+        messagingSenderId: "14714045042",
+        appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
     let currentUser = "";
-    let userBalance = 1000; // Starting Local Test Balance
+    let userBalance = 0;
     let selectedChoice = "Gold";
     let isSpinning = false;
-    let localForceOutcome = "Auto";
 
-    // Instant Login Logic Without Database
     function userLogin() {
-        const username = document.getElementById('usernameInput').value.trim();
-        if (!username || username.length < 2) {
-            alert("कृपया कोई नाम दर्ज करें!");
+        const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+        const password = document.getElementById('passwordInput').value.trim();
+
+        if (!username || username.length < 3 || !password || password.length < 4) {
+            alert("कृपया सही यूजरनेम (min 3 chars) और पासवर्ड (min 4 chars) डालें!");
             return;
         }
         currentUser = username;
-        
+
+        database.ref('users/' + currentUser).once('value', snapshot => {
+            if (!snapshot.exists()) {
+                // Registering new user with ₹50 free bonus
+                database.ref('users/' + currentUser).set({
+                    password: password,
+                    balance: 50
+                }).then(() => { enterApp(); });
+            } else {
+                // Verify password for existing player
+                if (snapshot.val().password === password) {
+                    enterApp();
+                } else {
+                    alert("गलत पासवर्ड! कृपया सही पासवर्ड डालें।");
+                }
+            }
+        });
+    }
+
+    function enterApp() {
+        database.ref('users/' + currentUser).on('value', snap => {
+            if(snap.exists()) {
+                userBalance = snap.val().balance;
+                document.getElementById('userBalance').innerText = userBalance.toFixed(2);
+            }
+        });
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('userTitle').innerText = currentUser.toUpperCase();
-        updateBalanceDisplay();
     }
 
     function selectChoice(choice) {
@@ -156,84 +186,70 @@
         }
     }
 
-    // Local Admin Force Result Config
-    function setLocalForce(option) {
-        localForceOutcome = option;
-        document.getElementById('admGold').classList.remove('active');
-        document.getElementById('admSilver').classList.remove('active');
-        document.getElementById('admAuto').classList.remove('active');
-        
-        if(option === 'Gold') document.getElementById('admGold').classList.add('active');
-        else if(option === 'Silver') document.getElementById('admSilver').classList.add('active');
-        else document.getElementById('admAuto').classList.add('active');
-    }
+    function requestDeposit() {
+        const amt = parseFloat(document.getElementById('depAmount').value);
+        const utr = document.getElementById('depUtr').value.trim();
 
-    // Add Free Money in Local Wallet
-    function addDummyMoney() {
-        const amt = parseFloat(document.getElementById('dummyDepAmt').value) || 0;
-        if(amt > 0) {
-            userBalance += amt;
-            updateBalanceDisplay();
-            alert(`₹${amt} सफलतापूर्वक आपके वॉलेट में जोड़ दिए गए हैं!`);
-            switchTab('game');
+        if (isNaN(amt) || amt < 10 || utr.length < 6) {
+            alert("कृपया सही राशि और UTR आईडी डालें!");
+            return;
         }
+
+        database.ref('depositRequests').push().set({
+            username: currentUser,
+            amount: amt,
+            utr: utr,
+            status: 'pending',
+            timestamp: Date.now()
+        }).then(() => {
+            alert("रिक्वेस्ट भेज दी गई है! एडमिन वेरिफिकेशन के बाद बैलेंस ऐड हो जाएगा।");
+            document.getElementById('depAmount').value = '';
+            document.getElementById('depUtr').value = '';
+        });
     }
 
-    // Core Game Spin Logic
     function playGame() {
         if (isSpinning) return;
         const bet = parseFloat(document.getElementById('betAmount').value);
 
         if (isNaN(bet) || bet < 10) { alert("न्यूनतम दांव ₹10 है!"); return; }
-        if (bet > userBalance) { alert("वॉलेट में पर्याप्त बैलेंस नहीं है!"); return; }
+        if (bet > userBalance) { alert("वॉलेट में बैलेंस कम है!"); return; }
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
         document.getElementById('resultMsg').innerText = "Spinning...";
 
-        // Deduct balance
-        userBalance -= bet;
-        updateBalanceDisplay();
+        database.ref('users/' + currentUser).update({ balance: userBalance - bet });
 
-        // Determine result based on admin trigger
-        let result = localForceOutcome;
-        if (result === 'Auto') {
-            result = Math.random() < 0.5 ? 'Gold' : 'Silver';
-        }
-
-        // Animation Effect
-        const coin = document.getElementById('gameCoin');
-        let deg = 0;
-        let spins = 10;
-        
-        const interval = setInterval(() => {
-            deg += 36;
-            coin.style.transform = `rotateY(${deg}deg)`;
-            spins--;
-            
-            if (spins <= 0) {
-                clearInterval(interval);
-                coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
-                
-                // Payout Calculation
-                const msg = document.getElementById('resultMsg');
-                if (selectedChoice === result) {
-                    const winAmt = bet * 1.8;
-                    userBalance += winAmt;
-                    msg.innerHTML = `<span class="win-text">🎉 WIN! Winner was ${result.toUpperCase()}. You won ₹${winAmt.toFixed(2)}</span>`;
-                } else {
-                    msg.innerHTML = `<span class="lose-text">❌ LOSE! Result was ${result.toUpperCase()}. Better luck next time!</span>`;
-                }
-                
-                updateBalanceDisplay();
-                isSpinning = false;
-                document.getElementById('spinBtn').disabled = false;
+        database.ref('system/forceOutcome').once('value', snapshot => {
+            let result = snapshot.val() || 'Auto';
+            if (result === 'Auto') {
+                result = Math.random() < 0.5 ? 'Gold' : 'Silver';
             }
-        }, 120);
-    }
 
-    function updateBalanceDisplay() {
-        document.getElementById('userBalance').innerText = userBalance.toFixed(2);
+            const coin = document.getElementById('gameCoin');
+            let deg = 0, spins = 10;
+            const interval = setInterval(() => {
+                deg += 36;
+                coin.style.transform = `rotateY(${deg}deg)`;
+                spins--;
+                if (spins <= 0) {
+                    clearInterval(interval);
+                    coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
+                    
+                    const msg = document.getElementById('resultMsg');
+                    if (selectedChoice === result) {
+                        const winAmt = bet * 1.8;
+                        database.ref('users/' + currentUser).update({ balance: userBalance + winAmt });
+                        msg.innerHTML = `<span class="win-text">🎉 WIN! Result: ${result.toUpperCase()}. Won ₹${winAmt.toFixed(2)}</span>`;
+                    } else {
+                        msg.innerHTML = `<span class="lose-text">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
+                    }
+                    isSpinning = false;
+                    document.getElementById('spinBtn').disabled = false;
+                }
+            }, 120);
+        });
     }
 </script>
 </body>
