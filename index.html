@@ -14,294 +14,54 @@
             --input-bg: #070c18;
             --border-color: #1e2f55;
             --gold: #ffd700;
-            --gold-glow: #ffae00;
             --silver: #e0e0e0;
             --text-main: #ffffff;
             --text-muted: #6b7c96;
             --success: #00e676;
+            --danger: #ff4d4d;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
-            background: radial-gradient(circle at center, #142244 0%, #070b19 100%);
-        }
-
-        .phone-container {
-            width: 100%;
-            max-width: 390px;
-            background: var(--panel-bg);
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Views management */
-        .view-section {
-            display: none;
-            padding: 25px 20px;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* Auth Screen Styles */
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .auth-header h2 {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff 30%, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Reusable Inputs & Buttons */
-        .custom-input {
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px;
-            color: #fff;
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .custom-input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-        }
-
-        .primary-btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            background: linear-gradient(135deg, #ffe066, #f5af19);
-            color: #3b2300;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .primary-btn:active {
-            transform: scale(0.98);
-        }
-
-        .primary-btn:disabled {
-            background: #1c2638;
-            color: var(--text-muted);
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-
-        .hint-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 15px;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        /* Game Header Styles */
-        .game-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            background: rgba(0,0,0,0.15);
-        }
-
-        .game-header h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .balance-badge {
-            background: rgba(255, 215, 0, 0.08);
-            border: 1px dashed rgba(255, 215, 0, 0.3);
-            border-radius: 12px;
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .balance-badge span {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .balance-amount {
-            font-size: 20px;
-            color: var(--gold);
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-
-        /* Coin Area */
-        .coin-box {
-            perspective: 1000px;
-            margin: 35px auto;
-            width: 130px;
-            height: 130px;
-        }
-
-        .coin-element {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s linear;
-        }
-
-        .coin-side {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            font-weight: 800;
-            border: 4px solid;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .side-gold {
-            background: linear-gradient(135deg, #ffe680, #cc9900);
-            color: #3b2300;
-            border-color: #ffe680;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .side-silver {
-            background: linear-gradient(135deg, #ffffff, #999999);
-            color: #222;
-            border-color: #ffffff;
-            transform: rotateY(180deg);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Choice Selectors */
-        .selectors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .select-btn {
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.02);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .select-btn.gold-style.active {
-            background: linear-gradient(135deg, #ffe066, #f5af19);
-            color: #3b2300;
-            border-color: var(--gold);
-            box-shadow: 0 4px 12px rgba(245, 175, 25, 0.2);
-        }
-
-        .select-btn.silver-style.active {
-            background: linear-gradient(135deg, #ffffff, #b0b0b0);
-            color: #222;
-            border-color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
-        }
-
-        /* Result Alerts */
-        .status-box {
-            margin-top: 18px;
-            font-size: 15px;
-            font-weight: 600;
-            min-height: 24px;
-        }
-        .text-win { color: var(--success); text-shadow: 0 0 8px rgba(0,230,118,0.2); }
-        .text-lose { color: #ff4d4d; }
-
-        /* Tabs Navigation */
-        .navigation-bar {
-            display: flex;
-            border-top: 1px solid var(--border-color);
-            background: rgba(7, 12, 24, 0.6);
-        }
-
-        .nav-item {
-            flex: 1;
-            padding: 16px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-item.active {
-            color: var(--gold);
-            background: rgba(255,255,255,0.01);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; background: radial-gradient(circle at center, #142244 0%, #070b19 100%); }
+        .phone-container { width: 100%; max-width: 390px; background: var(--panel-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; min-height: 580px; }
+        .view-section { display: none; padding: 25px 20px; }
+        .view-section.active { display: block; }
+        .custom-input { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 16px; outline: none; }
+        .custom-input:focus { border-color: var(--gold); }
+        .primary-btn { width: 100%; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; background: linear-gradient(135deg, #ffe066, #f5af19); color: #3b2300; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); }
+        .primary-btn:disabled { background: #1c2638; color: var(--text-muted); box-shadow: none; }
+        .game-header { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; background: rgba(0,0,0,0.15); }
+        .balance-badge { background: rgba(255, 215, 0, 0.08); border: 1px dashed rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .balance-amount { font-size: 20px; color: var(--gold); font-weight: 700; }
+        .coin-box { perspective: 1000px; margin: 30px auto; width: 120px; height: 120px; }
+        .coin-element { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
+        .coin-side { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 800; border: 4px solid; }
+        .side-gold { background: linear-gradient(135deg, #ffe680, #cc9900); color: #3b2300; border-color: #ffe680; }
+        .side-silver { background: linear-gradient(135deg, #ffffff, #999999); color: #222; border-color: #ffffff; transform: rotateY(180deg); }
+        .selectors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .select-btn { padding: 14px; font-size: 15px; font-weight: 700; border-radius: 14px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.02); color: var(--text-muted); cursor: pointer; }
+        .select-btn.gold-style.active { background: linear-gradient(135deg, #ffe066, #f5af19); color: #3b2300; border-color: var(--gold); }
+        .select-btn.silver-style.active { background: linear-gradient(135deg, #ffffff, #b0b0b0); color: #222; border-color: #fff; }
+        .status-box { margin-top: 15px; font-size: 15px; font-weight: 600; text-align: center; min-height: 24px; }
+        .text-win { color: var(--success); }
+        .text-lose { color: var(--danger); }
+        .navigation-bar { display: flex; border-top: 1px solid var(--border-color); background: rgba(7, 12, 24, 0.9); margin-top: auto; }
+        .nav-item { flex: 1; padding: 16px; background: none; border: none; color: var(--text-muted); font-weight: 700; font-size: 13px; cursor: pointer; text-align: center; }
+        .nav-item.active { color: var(--gold); background: rgba(255,255,255,0.02); }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
-    <!-- View 1: Auth Screen (Only shown when logged out) -->
+    <!-- View 1: Auth Screen -->
     <div id="authView" class="view-section active">
-        <div class="auth-header">
-            <h2>LOGIN / REGISTER</h2>
-        </div>
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold);">LOGIN / REGISTER</h2>
         <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
         <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
         <button class="primary-btn" onclick="userLogin()">Start Playing</button>
-        <p class="hint-text">*अगर यूजरनेम नया है, तो यही आपका पासवर्ड बन जाएगा।</p>
     </div>
 
-    <!-- View 2: App Main Dashboard (Hidden until logged in) -->
-    <div id="mainView" style="display: none; flex-direction: column; height: 100%;">
+    <!-- View 2: Main Dashboard -->
+    <div id="mainView" style="display: none; flex-direction: column; height: 100%; flex: 1;">
         <div class="game-header">
             <h3 id="userTitle">PLAYER</h3>
             <div class="balance-badge">
@@ -310,46 +70,52 @@
             </div>
         </div>
 
-        <!-- Tab Content 1: Game Panel -->
-        <div id="gameTab" class="view-section active" style="padding: 20px 20px 10px 20px;">
+        <!-- Tab 1: Play -->
+        <div id="gameTab" class="view-section active">
             <div class="coin-box">
                 <div class="coin-element" id="gameCoin">
                     <div class="coin-side side-gold">GOLD</div>
                     <div class="coin-side side-silver">SILVER</div>
                 </div>
             </div>
-            
             <div class="selectors-grid">
                 <button class="select-btn gold-style active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
                 <button class="select-btn silver-style" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
             </div>
-
-            <input type="number" class="custom-input" id="betAmount" value="50" min="10" style="margin-bottom: 20px;">
+            <input type="number" class="custom-input" id="betAmount" value="50" min="10">
             <button class="primary-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
-            
-            <div class="status-box" id="resultMsg" style="text-align: center;">Enter bet and Spin!</div>
+            <div class="status-box" id="resultMsg">Enter bet and Spin!</div>
         </div>
 
-        <!-- Tab Content 2: Wallet Panel -->
-        <div id="walletTab" class="view-section" style="padding: 25px 20px;">
-            <h3 style="color: var(--gold); margin-bottom: 8px; font-size: 18px; text-align: center;">ADD MONEY (UPI)</h3>
-            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay on UPI ID: <b style="color: #fff;">yourupi@ybl</b></p>
-            
-            <input type="number" id="depAmount" class="custom-input" placeholder="Amount Paid (₹)">
-            <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Reference No.">
-            <button class="primary-btn" style="background: linear-gradient(135deg, #fff, #b0b0b0); color: #111; box-shadow: none;" onclick="requestDeposit()">Submit Deposit</button>
+        <!-- Tab 2: Deposit -->
+        <div id="depositTab" class="view-section">
+            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">DEPOSIT MONEY</h3>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff;">yourupi@ybl</b></p>
+            <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)">
+            <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Ref No.">
+            <button class="primary-btn" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
-        <!-- Footer Navigation Menu -->
-        <div class="navigation-bar" style="margin-top: auto;">
+        <!-- Tab 3: Withdraw (NEW) -->
+        <div id="withdrawTab" class="view-section">
+            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">WITHDRAW MONEY</h3>
+            <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">*न्यूनतम निकासी राशि ₹100 है।</p>
+            <input type="number" id="witAmount" class="custom-input" placeholder="Amount to Withdraw (₹)">
+            <input type="text" id="witUpi" class="custom-input" placeholder="Enter Your UPI ID">
+            <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff;" onclick="requestWithdraw()">Request Withdrawal</button>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
             <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
-            <button class="nav-item" id="btnWalletTab" onclick="switchTab('wallet')">💰 Wallet</button>
+            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">💰 Deposit</button>
+            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">💸 Withdraw</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Live Firebase Config Connected
+    // Config Connection
     const firebaseConfig = {
         apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
         authDomain: "silvergold-dbe2f.firebaseapp.com",
@@ -370,25 +136,15 @@
     function userLogin() {
         const username = document.getElementById('usernameInput').value.trim().toLowerCase();
         const password = document.getElementById('passwordInput').value.trim();
-
-        if (!username || username.length < 3 || !password || password.length < 4) {
-            alert("कृपया सही यूजरनेम (min 3 chars) और पासवर्ड (min 4 chars) डालें!");
-            return;
-        }
+        if (!username || username.length < 3 || !password || password.length < 4) { alert("Invalid inputs!"); return; }
         currentUser = username;
 
         database.ref('users/' + currentUser).once('value', snapshot => {
             if (!snapshot.exists()) {
-                database.ref('users/' + currentUser).set({
-                    password: password,
-                    balance: 50
-                }).then(() => { enterApp(); });
+                database.ref('users/' + currentUser).set({ password: password, balance: 50 }).then(() => { enterApp(); });
             } else {
-                if (snapshot.val().password === password) {
-                    enterApp();
-                } else {
-                    alert("गलत पासवर्ड! कृपया सही पासवर्ड डालें।");
-                }
+                if (snapshot.val().password === password) { enterApp(); } 
+                else { alert("Wrong Password!"); }
             }
         });
     }
@@ -416,70 +172,59 @@
 
     function switchTab(tab) {
         document.getElementById('gameTab').classList.remove('active');
-        document.getElementById('walletTab').classList.remove('active');
+        document.getElementById('depositTab').classList.remove('active');
+        document.getElementById('withdrawTab').classList.remove('active');
         document.getElementById('btnGameTab').classList.remove('active');
-        document.getElementById('btnWalletTab').classList.remove('active');
+        document.getElementById('btnDepositTab').classList.remove('active');
+        document.getElementById('btnWithdrawTab').classList.remove('active');
 
-        if (tab === 'game') {
-            document.getElementById('gameTab').classList.add('active');
-            document.getElementById('btnGameTab').classList.add('active');
-        } else {
-            document.getElementById('walletTab').classList.add('active');
-            document.getElementById('btnWalletTab').classList.add('active');
-        }
+        if (tab === 'game') { document.getElementById('gameTab').classList.add('active'); document.getElementById('btnGameTab').classList.add('active'); }
+        else if (tab === 'deposit') { document.getElementById('depositTab').classList.add('active'); document.getElementById('btnDepositTab').classList.add('active'); }
+        else { document.getElementById('withdrawTab').classList.add('active'); document.getElementById('btnWithdrawTab').classList.add('active'); }
     }
 
     function requestDeposit() {
         const amt = parseFloat(document.getElementById('depAmount').value);
         const utr = document.getElementById('depUtr').value.trim();
+        if (isNaN(amt) || amt < 10 || utr.length < 6) { alert("Enter valid details!"); return; }
+        database.ref('depositRequests').push().set({ username: currentUser, amount: amt, utr: utr, status: 'pending', timestamp: Date.now() })
+        .then(() => { alert("Deposit request sent!"); document.getElementById('depAmount').value = ''; document.getElementById('depUtr').value = ''; });
+    }
 
-        if (isNaN(amt) || amt < 10 || utr.length < 6) {
-            alert("कृपया सही राशि और UTR आईडी डालें!");
-            return;
-        }
+    function requestWithdraw() {
+        const amt = parseFloat(document.getElementById('witAmount').value);
+        const upi = document.getElementById('witUpi').value.trim();
+        if (isNaN(amt) || amt < 100) { alert("Min withdrawal is ₹100!"); return; }
+        if (upi.length < 5 || !upi.includes('@')) { alert("Enter valid UPI ID!"); return; }
+        if (amt > userBalance) { alert("Insufficient balance!"); return; }
 
-        database.ref('depositRequests').push().set({
-            username: currentUser,
-            amount: amt,
-            utr: utr,
-            status: 'pending',
-            timestamp: Date.now()
-        }).then(() => {
-            alert("रिक्वेस्ट भेज दी गई है! एडमिन वेरिफिकेशन के बाद बैलेंस ऐड हो जाएगा।");
-            document.getElementById('depAmount').value = '';
-            document.getElementById('depUtr').value = '';
+        // Deduct balance immediately for safety
+        database.ref('users/' + currentUser).update({ balance: userBalance - amt }).then(() => {
+            database.ref('withdrawRequests').push().set({ username: currentUser, amount: amt, upi: upi, status: 'pending', timestamp: Date.now() })
+            .then(() => { alert("Withdraw request submitted successfully!"); document.getElementById('witAmount').value = ''; document.getElementById('witUpi').value = ''; });
         });
     }
 
     function playGame() {
         if (isSpinning) return;
         const bet = parseFloat(document.getElementById('betAmount').value);
-
-        if (isNaN(bet) || bet < 10) { alert("न्यूनतम दांव ₹10 है!"); return; }
-        if (bet > userBalance) { alert("वॉलेट में बैलेंस कम है!"); return; }
+        if (isNaN(bet) || bet < 10 || bet > userBalance) { alert("Check your bet amount/balance!"); return; }
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
-        document.getElementById('resultMsg').innerText = "Spinning...";
-
         database.ref('users/' + currentUser).update({ balance: userBalance - bet });
 
         database.ref('system/forceOutcome').once('value', snapshot => {
             let result = snapshot.val() || 'Auto';
-            if (result === 'Auto') {
-                result = Math.random() < 0.5 ? 'Gold' : 'Silver';
-            }
+            if (result === 'Auto') { result = Math.random() < 0.5 ? 'Gold' : 'Silver'; }
 
             const coin = document.getElementById('gameCoin');
-            let deg = 0, spins = 15;
+            let deg = 0, spins = 12;
             const interval = setInterval(() => {
-                deg += 45;
-                coin.style.transform = `rotateY(${deg}deg)`;
-                spins--;
+                deg += 45; coin.style.transform = `rotateY(${deg}deg)`; spins--;
                 if (spins <= 0) {
                     clearInterval(interval);
                     coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
-                    
                     const msg = document.getElementById('resultMsg');
                     if (selectedChoice === result) {
                         const winAmt = bet * 1.8;
@@ -488,8 +233,7 @@
                     } else {
                         msg.innerHTML = `<span class="text-lose">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
                     }
-                    isSpinning = false;
-                    document.getElementById('spinBtn').disabled = false;
+                    isSpinning = false; document.getElementById('spinBtn').disabled = false;
                 }
             }, 100);
         });
