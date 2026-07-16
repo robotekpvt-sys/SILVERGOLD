@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold & Silver - Local Test Mode</title>
+    <style>
+        :root {
+            --bg-color: #0b1528;
+            --card-bg: #152238;
+            --gold: #FFD700;
+            --gold-gradient: linear-gradient(135deg, #FFE066, #F5AF19);
+            --silver: #E0E0E0;
+            --silver-gradient: linear-gradient(135deg, #FFFFFF, #B0B0B0);
+            --text-color: #FFFFFF;
+            --accent-green: #00E676;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        .phone-container { width: 100%; max-width: 410px; background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 2px solid #1e2f4d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header { padding: 20px; text-align: center; border-bottom: 1px solid #1e2f4d; }
+        .header h1 { font-size: 24px; background: linear-gradient(90deg, #FFD700, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .balance-card { background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .balance-amount { font-size: 20px; color: var(--gold); font-weight: bold; }
+        .game-area, .auth-area, .wallet-area { padding: 20px; display: none; text-align: center; }
+        .active-screen { display: block !important; }
+        .coin-wrapper { perspective: 1000px; margin: 25px auto; width: 120px; height: 120px; }
+        .coin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
+        .coin-face { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; border: 5px solid; }
+        .coin-gold { background: var(--gold-gradient); color: #4a2f00; border-color: #ffd700; }
+        .coin-silver { background: var(--silver-gradient); color: #2b2b2b; border-color: #f0f0f0; transform: rotateY(180deg); }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .choice-btn { padding: 12px; font-size: 15px; font-weight: bold; border-radius: 10px; border: 2px solid transparent; cursor: pointer; background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .choice-btn.gold-btn.active { background: var(--gold-gradient); color: #4a2f00; border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+        .choice-btn.silver-btn.active { background: var(--silver-gradient); color: #2b2b2b; border-color: var(--silver); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
+        .bet-input, .auth-input { width: 100%; background: #0d1a30; border: 1px solid #1e2f4d; border-radius: 10px; padding: 12px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 15px; outline: none; }
+        .action-btn { width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; background: var(--gold-gradient); color: #4a2f00; text-transform: uppercase; }
+        .action-btn:disabled { background: #202d44; color: #4f5f75; cursor: not-allowed; }
+        .result-message { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .win-text { color: var(--accent-green); }
+        .lose-text { color: #ff3d00; }
+        .nav-tabs { display: flex; border-top: 1px solid #1e2f4d; background: #0d1a30; }
+        .tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #8fa0bc; font-weight: bold; cursor: pointer; }
+        .tab-btn.active { color: var(--gold); border-top: 2px solid var(--gold); }
+        
+        /* Local Test Admin Controls Style */
+        .local-admin { margin-top: 20px; border-top: 1px dashed #1e2f4d; padding-top: 15px; text-align: left; }
+        .admin-title { font-size: 11px; color: #586f91; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; text-align: center;}
+        .admin-flex { display: flex; gap: 5px; }
+        .adm-btn { flex: 1; padding: 6px; font-size: 11px; background: #0d1a30; border: 1px solid #1e2f4d; color: #8fa0bc; border-radius: 5px; cursor: pointer; font-weight: bold;}
+        .adm-btn.active { background: #ff3d00; color: #fff; border-color: #ff3d00; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div id="authScreen" class="auth-area active-screen">
+        <h2 style="margin-bottom: 20px; color: var(--gold); font-weight: 800;">GOLD & SILVER</h2>
+        <input type="text" id="usernameInput" class="auth-input" placeholder="Enter Username (e.g. rahul)">
+        <button class="action-btn" onclick="userLogin()">Start Playing</button>
+    </div>
+
+    <div id="mainApp" style="display: none;">
+        <div class="header">
+            <h1 id="userTitle">PLAYER</h1>
+            <div class="balance-card">
+                <span>WALLET BALANCE</span>
+                <span class="balance-amount">₹<span id="userBalance">1000.00</span></span>
+            </div>
+        </div>
+
+        <div id="gameTab" class="game-area active-screen">
+            <div class="coin-wrapper">
+                <div class="coin" id="gameCoin">
+                    <div class="coin-face coin-gold">GOLD</div>
+                    <div class="coin-face coin-silver">SILVER</div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="choice-btn gold-btn active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
+                <button class="choice-btn silver-btn" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
+            </div>
+            
+            <input type="number" class="bet-input" id="betAmount" value="50" min="10">
+            <button class="action-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
+            <div class="result-message" id="resultMsg">Choose Gold/Silver & Spin!</div>
+
+            <div class="local-admin">
+                <div class="admin-title">⚙️ Local Admin Control (For Testing Only)</div>
+                <div class="admin-flex">
+                    <button class="adm-btn" id="admGold" onclick="setLocalForce('Gold')">Force Gold</button>
+                    <button class="adm-btn" id="admSilver" onclick="setLocalForce('Silver')">Force Silver</button>
+                    <button class="adm-btn active" id="admAuto" onclick="setLocalForce('Auto')">Normal (50/50)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="walletTab" class="wallet-area">
+            <h3 style="color: var(--gold); margin-bottom: 10px;">ADD MONEY SIMULATOR</h3>
+            <p style="font-size: 13px; color: #8fa0bc; margin-bottom: 15px;">लोकल मोड में आप यहाँ सीधे डमी मनी ऐड कर सकते हैं।</p>
+            <input type="number" id="dummyDepAmt" class="bet-input" value="500" placeholder="Amount">
+            <button class="action-btn" onclick="addDummyMoney()">Add Instantly</button>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
+            <button class="tab-btn" id="btnWalletTab" onclick="switchTab('wallet')">💰 Wallet</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentUser = "";
+    let userBalance = 1000; // Starting Local Test Balance
+    let selectedChoice = "Gold";
+    let isSpinning = false;
+    let localForceOutcome = "Auto";
+
+    // Instant Login Logic Without Database
+    function userLogin() {
+        const username = document.getElementById('usernameInput').value.trim();
+        if (!username || username.length < 2) {
+            alert("कृपया कोई नाम दर्ज करें!");
+            return;
+        }
+        currentUser = username;
+        
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('userTitle').innerText = currentUser.toUpperCase();
+        updateBalanceDisplay();
+    }
+
+    function selectChoice(choice) {
+        if (isSpinning) return;
+        selectedChoice = choice;
+        document.getElementById('chooseGold').classList.remove('active');
+        document.getElementById('chooseSilver').classList.remove('active');
+        if (choice === 'Gold') document.getElementById('chooseGold').classList.add('active');
+        else document.getElementById('chooseSilver').classList.add('active');
+    }
+
+    function switchTab(tab) {
+        document.getElementById('gameTab').classList.remove('active-screen');
+        document.getElementById('walletTab').classList.remove('active-screen');
+        document.getElementById('btnGameTab').classList.remove('active');
+        document.getElementById('btnWalletTab').classList.remove('active');
+
+        if (tab === 'game') {
+            document.getElementById('gameTab').classList.add('active-screen');
+            document.getElementById('btnGameTab').classList.add('active');
+        } else {
+            document.getElementById('walletTab').classList.add('active-screen');
+            document.getElementById('btnWalletTab').classList.add('active');
+        }
+    }
+
+    // Local Admin Force Result Config
+    function setLocalForce(option) {
+        localForceOutcome = option;
+        document.getElementById('admGold').classList.remove('active');
+        document.getElementById('admSilver').classList.remove('active');
+        document.getElementById('admAuto').classList.remove('active');
+        
+        if(option === 'Gold') document.getElementById('admGold').classList.add('active');
+        else if(option === 'Silver') document.getElementById('admSilver').classList.add('active');
+        else document.getElementById('admAuto').classList.add('active');
+    }
+
+    // Add Free Money in Local Wallet
+    function addDummyMoney() {
+        const amt = parseFloat(document.getElementById('dummyDepAmt').value) || 0;
+        if(amt > 0) {
+            userBalance += amt;
+            updateBalanceDisplay();
+            alert(`₹${amt} सफलतापूर्वक आपके वॉलेट में जोड़ दिए गए हैं!`);
+            switchTab('game');
+        }
+    }
+
+    // Core Game Spin Logic
+    function playGame() {
+        if (isSpinning) return;
+        const bet = parseFloat(document.getElementById('betAmount').value);
+
+        if (isNaN(bet) || bet < 10) { alert("न्यूनतम दांव ₹10 है!"); return; }
+        if (bet > userBalance) { alert("वॉलेट में पर्याप्त बैलेंस नहीं है!"); return; }
+
+        isSpinning = true;
+        document.getElementById('spinBtn').disabled = true;
+        document.getElementById('resultMsg').innerText = "Spinning...";
+
+        // Deduct balance
+        userBalance -= bet;
+        updateBalanceDisplay();
+
+        // Determine result based on admin trigger
+        let result = localForceOutcome;
+        if (result === 'Auto') {
+            result = Math.random() < 0.5 ? 'Gold' : 'Silver';
+        }
+
+        // Animation Effect
+        const coin = document.getElementById('gameCoin');
+        let deg = 0;
+        let spins = 10;
+        
+        const interval = setInterval(() => {
+            deg += 36;
+            coin.style.transform = `rotateY(${deg}deg)`;
+            spins--;
+            
+            if (spins <= 0) {
+                clearInterval(interval);
+                coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
+                
+                // Payout Calculation
+                const msg = document.getElementById('resultMsg');
+                if (selectedChoice === result) {
+                    const winAmt = bet * 1.8;
+                    userBalance += winAmt;
+                    msg.innerHTML = `<span class="win-text">🎉 WIN! Winner was ${result.toUpperCase()}. You won ₹${winAmt.toFixed(2)}</span>`;
+                } else {
+                    msg.innerHTML = `<span class="lose-text">❌ LOSE! Result was ${result.toUpperCase()}. Better luck next time!</span>`;
+                }
+                
+                updateBalanceDisplay();
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+            }
+        }, 120);
+    }
+
+    function updateBalanceDisplay() {
+        document.getElementById('userBalance').innerText = userBalance.toFixed(2);
+    }
+</script>
+</body>
+</html>
