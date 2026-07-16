@@ -3,108 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold & Silver - Play Premium</title>
-    <!-- Firebase Legacy SDKs for Easy CDN Integration -->
+    <title>Gold & Silver - Premium Edition</title>
+    <!-- Firebase Legacy SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
-            --bg-color: #0b1528;
-            --card-bg: #152238;
-            --gold: #FFD700;
-            --gold-gradient: linear-gradient(135deg, #FFE066, #F5AF19);
-            --silver: #E0E0E0;
-            --silver-gradient: linear-gradient(135deg, #FFFFFF, #B0B0B0);
-            --text-color: #FFFFFF;
-            --accent-green: #00E676;
+            --bg-dark: #070b19;
+            --panel-bg: #0e172c;
+            --input-bg: #070c18;
+            --border-color: #1e2f55;
+            --gold: #ffd700;
+            --gold-glow: #ffae00;
+            --silver: #e0e0e0;
+            --text-main: #ffffff;
+            --text-muted: #6b7c96;
+            --success: #00e676;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
-        .phone-container { width: 100%; max-width: 410px; background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 2px solid #1e2f4d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .header { padding: 20px; text-align: center; border-bottom: 1px solid #1e2f4d; }
-        .header h1 { font-size: 24px; background: linear-gradient(90deg, #FFD700, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-        .balance-card { background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .balance-amount { font-size: 20px; color: var(--gold); font-weight: bold; }
-        .game-area, .auth-area, .wallet-area { padding: 20px; display: none; text-align: center; }
-        .active-screen { display: block !important; }
-        .coin-wrapper { perspective: 1000px; margin: 25px auto; width: 120px; height: 120px; }
-        .coin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
-        .coin-face { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; border: 5px solid; }
-        .coin-gold { background: var(--gold-gradient); color: #4a2f00; border-color: #ffd700; }
-        .coin-silver { background: var(--silver-gradient); color: #2b2b2b; border-color: #f0f0f0; transform: rotateY(180deg); }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .choice-btn { padding: 12px; font-size: 15px; font-weight: bold; border-radius: 10px; border: 2px solid transparent; cursor: pointer; background: rgba(255, 255, 255, 0.05); color: #fff; }
-        .choice-btn.gold-btn.active { background: var(--gold-gradient); color: #4a2f00; border-color: var(--gold); }
-        .choice-btn.silver-btn.active { background: var(--silver-gradient); color: #2b2b2b; border-color: var(--silver); }
-        .bet-input, .auth-input { width: 100%; background: #0d1a30; border: 1px solid #1e2f4d; border-radius: 10px; padding: 12px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .action-btn { width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; background: var(--gold-gradient); color: #4a2f00; text-transform: uppercase; }
-        .action-btn:disabled { background: #202d44; color: #4f5f75; }
-        .result-message { margin-top: 15px; font-weight: bold; min-height: 24px; }
-        .win-text { color: var(--accent-green); }
-        .lose-text { color: #ff3d00; }
-        .nav-tabs { display: flex; border-top: 1px solid #1e2f4d; background: #0d1a30; }
-        .tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #8fa0bc; font-weight: bold; cursor: pointer; }
-        .tab-btn.active { color: var(--gold); border-top: 2px solid var(--gold); }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            background: radial-gradient(circle at center, #142244 0%, #070b19 100%);
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 390px;
+            background: var(--panel-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Views management */
+        .view-section {
+            display: none;
+            padding: 25px 20px;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Auth Screen Styles */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 30%, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Reusable Inputs & Buttons */
+        .custom-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ffe066, #f5af19);
+            color: #3b2300;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .primary-btn:disabled {
+            background: #1c2638;
+            color: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 15px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Game Header Styles */
+        .game-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .game-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .balance-badge {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-badge span {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .balance-amount {
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Coin Area */
+        .coin-box {
+            perspective: 1000px;
+            margin: 35px auto;
+            width: 130px;
+            height: 130px;
+        }
+
+        .coin-element {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear;
+        }
+
+        .coin-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 800;
+            border: 4px solid;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .side-gold {
+            background: linear-gradient(135deg, #ffe680, #cc9900);
+            color: #3b2300;
+            border-color: #ffe680;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .side-silver {
+            background: linear-gradient(135deg, #ffffff, #999999);
+            color: #222;
+            border-color: #ffffff;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Choice Selectors */
+        .selectors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .select-btn {
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.02);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-btn.gold-style.active {
+            background: linear-gradient(135deg, #ffe066, #f5af19);
+            color: #3b2300;
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(245, 175, 25, 0.2);
+        }
+
+        .select-btn.silver-style.active {
+            background: linear-gradient(135deg, #ffffff, #b0b0b0);
+            color: #222;
+            border-color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Result Alerts */
+        .status-box {
+            margin-top: 18px;
+            font-size: 15px;
+            font-weight: 600;
+            min-height: 24px;
+        }
+        .text-win { color: var(--success); text-shadow: 0 0 8px rgba(0,230,118,0.2); }
+        .text-lose { color: #ff4d4d; }
+
+        /* Tabs Navigation */
+        .navigation-bar {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            background: rgba(7, 12, 24, 0.6);
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--gold);
+            background: rgba(255,255,255,0.01);
+        }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
-    <!-- Secure Auth Screen -->
-    <div id="authScreen" class="auth-area active-screen">
-        <h2 style="margin-bottom: 20px; color: var(--gold); font-weight: 800;">LOGIN / REGISTER</h2>
-        <input type="text" id="usernameInput" class="auth-input" placeholder="Enter Username">
-        <input type="password" id="passwordInput" class="auth-input" placeholder="Enter Password">
-        <button class="action-btn" onclick="userLogin()">Start Playing</button>
-        <p style="font-size: 11px; color: #8fa0bc; margin-top: 12px;">*अगर यूजरनेम नया है, तो यही आपका पासवर्ड बन जाएगा।</p>
+    <!-- View 1: Auth Screen (Only shown when logged out) -->
+    <div id="authView" class="view-section active">
+        <div class="auth-header">
+            <h2>LOGIN / REGISTER</h2>
+        </div>
+        <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
+        <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
+        <button class="primary-btn" onclick="userLogin()">Start Playing</button>
+        <p class="hint-text">*अगर यूजरनेम नया है, तो यही आपका पासवर्ड बन जाएगा।</p>
     </div>
 
-    <!-- Main Live App -->
-    <div id="mainApp" style="display: none;">
-        <div class="header">
-            <h1 id="userTitle">GOLD & SILVER</h1>
-            <div class="balance-card">
+    <!-- View 2: App Main Dashboard (Hidden until logged in) -->
+    <div id="mainView" style="display: none; flex-direction: column; height: 100%;">
+        <div class="game-header">
+            <h3 id="userTitle">PLAYER</h3>
+            <div class="balance-badge">
                 <span>WALLET BALANCE</span>
                 <span class="balance-amount">₹<span id="userBalance">0.00</span></span>
             </div>
         </div>
 
-        <!-- Tab 1: Play Dashboard -->
-        <div id="gameTab" class="game-area active-screen">
-            <div class="coin-wrapper">
-                <div class="coin" id="gameCoin">
-                    <div class="coin-face coin-gold">GOLD</div>
-                    <div class="coin-face coin-silver">SILVER</div>
+        <!-- Tab Content 1: Game Panel -->
+        <div id="gameTab" class="view-section active" style="padding: 20px 20px 10px 20px;">
+            <div class="coin-box">
+                <div class="coin-element" id="gameCoin">
+                    <div class="coin-side side-gold">GOLD</div>
+                    <div class="coin-side side-silver">SILVER</div>
                 </div>
             </div>
-            <div class="btn-group">
-                <button class="choice-btn gold-btn active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
-                <button class="choice-btn silver-btn" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
+            
+            <div class="selectors-grid">
+                <button class="select-btn gold-style active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
+                <button class="select-btn silver-style" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
             </div>
-            <input type="number" class="bet-input" id="betAmount" value="50" min="10">
-            <button class="action-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
-            <div class="result-message" id="resultMsg">Enter bet and Spin!</div>
+
+            <input type="number" class="custom-input" id="betAmount" value="50" min="10" style="margin-bottom: 20px;">
+            <button class="primary-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
+            
+            <div class="status-box" id="resultMsg" style="text-align: center;">Enter bet and Spin!</div>
         </div>
 
-        <!-- Tab 2: Wallet Dashboard (Live Deposit) -->
-        <div id="walletTab" class="wallet-area">
-            <h3 style="color: var(--gold); margin-bottom: 10px;">ADD MONEY (UPI)</h3>
-            <p style="font-size: 13px; color: #8fa0bc; margin-bottom: 15px;">Pay on UPI ID: <b style="color: #fff;">yourupi@ybl</b></p>
-            <input type="number" id="depAmount" class="bet-input" placeholder="Amount Paid (₹)">
-            <input type="text" id="depUtr" class="bet-input" placeholder="12 Digit UTR / Reference No.">
-            <button class="action-btn" style="background: var(--silver-gradient); color: #000;" onclick="requestDeposit()">Submit Deposit</button>
+        <!-- Tab Content 2: Wallet Panel -->
+        <div id="walletTab" class="view-section" style="padding: 25px 20px;">
+            <h3 style="color: var(--gold); margin-bottom: 8px; font-size: 18px; text-align: center;">ADD MONEY (UPI)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay on UPI ID: <b style="color: #fff;">yourupi@ybl</b></p>
+            
+            <input type="number" id="depAmount" class="custom-input" placeholder="Amount Paid (₹)">
+            <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Reference No.">
+            <button class="primary-btn" style="background: linear-gradient(135deg, #fff, #b0b0b0); color: #111; box-shadow: none;" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
-        <!-- App Bottom Navigation -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
-            <button class="tab-btn" id="btnWalletTab" onclick="switchTab('wallet')">💰 Wallet</button>
+        <!-- Footer Navigation Menu -->
+        <div class="navigation-bar" style="margin-top: auto;">
+            <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
+            <button class="nav-item" id="btnWalletTab" onclick="switchTab('wallet')">💰 Wallet</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Live Firebase Config Connected 
+    // Live Firebase Config Connected
     const firebaseConfig = {
         apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
         authDomain: "silvergold-dbe2f.firebaseapp.com",
@@ -134,13 +379,11 @@
 
         database.ref('users/' + currentUser).once('value', snapshot => {
             if (!snapshot.exists()) {
-                // Registering new user with ₹50 free bonus
                 database.ref('users/' + currentUser).set({
                     password: password,
                     balance: 50
                 }).then(() => { enterApp(); });
             } else {
-                // Verify password for existing player
                 if (snapshot.val().password === password) {
                     enterApp();
                 } else {
@@ -157,8 +400,8 @@
                 document.getElementById('userBalance').innerText = userBalance.toFixed(2);
             }
         });
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('authView').classList.remove('active');
+        document.getElementById('mainView').style.display = 'flex';
         document.getElementById('userTitle').innerText = currentUser.toUpperCase();
     }
 
@@ -172,16 +415,16 @@
     }
 
     function switchTab(tab) {
-        document.getElementById('gameTab').classList.remove('active-screen');
-        document.getElementById('walletTab').classList.remove('active-screen');
+        document.getElementById('gameTab').classList.remove('active');
+        document.getElementById('walletTab').classList.remove('active');
         document.getElementById('btnGameTab').classList.remove('active');
         document.getElementById('btnWalletTab').classList.remove('active');
 
         if (tab === 'game') {
-            document.getElementById('gameTab').classList.add('active-screen');
+            document.getElementById('gameTab').classList.add('active');
             document.getElementById('btnGameTab').classList.add('active');
         } else {
-            document.getElementById('walletTab').classList.add('active-screen');
+            document.getElementById('walletTab').classList.add('active');
             document.getElementById('btnWalletTab').classList.add('active');
         }
     }
@@ -228,9 +471,9 @@
             }
 
             const coin = document.getElementById('gameCoin');
-            let deg = 0, spins = 10;
+            let deg = 0, spins = 15;
             const interval = setInterval(() => {
-                deg += 36;
+                deg += 45;
                 coin.style.transform = `rotateY(${deg}deg)`;
                 spins--;
                 if (spins <= 0) {
@@ -241,14 +484,14 @@
                     if (selectedChoice === result) {
                         const winAmt = bet * 1.8;
                         database.ref('users/' + currentUser).update({ balance: userBalance + winAmt });
-                        msg.innerHTML = `<span class="win-text">🎉 WIN! Result: ${result.toUpperCase()}. Won ₹${winAmt.toFixed(2)}</span>`;
+                        msg.innerHTML = `<span class="text-win">🎉 WIN! Result: ${result.toUpperCase()}. Won ₹${winAmt.toFixed(2)}</span>`;
                     } else {
-                        msg.innerHTML = `<span class="lose-text">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
+                        msg.innerHTML = `<span class="text-lose">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
                     }
                     isSpinning = false;
                     document.getElementById('spinBtn').disabled = false;
                 }
-            }, 120);
+            }, 100);
         });
     }
 </script>
