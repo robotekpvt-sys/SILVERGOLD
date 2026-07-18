@@ -3,618 +3,1027 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gold & Silver - Premium Edition</title>
-    <!-- Firebase Standard Web SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>⚜️ GoldSilver - Premium Edition</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <style>
+        /* ===== PREMIUM CSS VARIABLES ===== */
         :root {
-            --bg-dark: #070b19;
-            --panel-bg: #0e172c;
-            --input-bg: #070c18;
-            --border-color: #1e2f55;
-            --gold: #ffd700;
-            --silver: #e0e0e0;
-            --text-main: #ffffff;
-            --text-muted: #6b7c96;
+            --bg-primary: #060b19;
+            --bg-secondary: #0d1a30;
+            --bg-card: rgba(13, 26, 48, 0.85);
+            --border-glow: rgba(255, 215, 0, 0.15);
+            --gold-main: #ffd700;
+            --gold-gradient: linear-gradient(135deg, #f5af19, #f9d423, #f5af19);
+            --silver-main: #e8e8e8;
+            --silver-gradient: linear-gradient(135deg, #b0b0b0, #ffffff, #b0b0b0);
+            --text-primary: #f0f4ff;
+            --text-secondary: #8899bb;
+            --text-muted: #4a5a7a;
             --success: #00e676;
-            --danger: #ff4d4d;
+            --danger: #ff4d6a;
+            --warning: #ffb300;
+            --shadow-premium: 0 8px 40px rgba(0,0,0,0.6);
+            --radius-premium: 20px;
         }
 
+        /* ===== RESET & BASE ===== */
         * { 
-            box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
 
-        body { 
-            background-color: var(--bg-dark); 
-            color: var(--text-main); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 10px; 
-            background: radial-gradient(circle at center, #142244 0%, #070b19 100%); 
+        body {
+            font-family: -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+            background: var(--bg-primary);
+            background-image: radial-gradient(ellipse at 30% 20%, rgba(255,215,0,0.03) 0%, transparent 60%),
+                              radial-gradient(ellipse at 70% 80%, rgba(255,215,0,0.02) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
         }
 
-        .phone-container { 
-            width: 100%; 
-            max-width: 410px; 
-            background: var(--panel-bg); 
-            border-radius: 24px; 
-            overflow: hidden; 
-            border: 1px solid var(--border-color); 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 620px; 
+        /* ===== APP CONTAINER ===== */
+        .app-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-premium);
+            border: 1px solid rgba(255,215,0,0.08);
+            box-shadow: var(--shadow-premium);
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            min-height: 680px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .view-section { 
-            display: none; 
-            padding: 25px 20px; 
+        /* ===== GLOW ORB BACKGROUND ===== */
+        .app-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ===== VIEW SECTIONS ===== */
+        .view-section {
+            display: none;
+            padding: 24px 20px;
             flex: 1;
+            animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .view-section.active { 
-            display: block; 
+        .view-section.active {
+            display: block;
         }
 
-        /* Auth Architecture CSS */
-        .auth-tabs { 
-            display: flex; 
-            border-bottom: 1px solid var(--border-color); 
-            margin-bottom: 25px; 
-            background: rgba(0,0,0,0.2); 
-            border-radius: 12px; 
-            overflow: hidden; 
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .auth-tab-btn { 
-            flex: 1; 
-            padding: 14px; 
-            background: none; 
-            border: none; 
-            color: var(--text-muted); 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 15px; 
+        /* ===== AUTH SCREEN ===== */
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-logo h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(255,215,0,0.15);
+        }
+
+        .auth-logo .subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 12px;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .auth-tab-btn.active { 
-            color: var(--gold); 
-            background: rgba(255,255,255,0.03); 
-            border-bottom: 2px solid var(--gold); 
+        .auth-tab-btn.active {
+            background: var(--gold-gradient);
+            color: #1a1200;
+            box-shadow: 0 4px 20px rgba(255,215,0,0.25);
         }
 
-        .custom-input { 
-            width: 100%; 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 14px; 
-            padding: 14px; 
-            color: #fff; 
-            text-align: center; 
-            font-size: 16px; 
-            margin-bottom: 16px; 
-            outline: none; 
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
         }
 
-        .custom-input:focus { 
-            border-color: var(--gold); 
+        .input-group .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
         }
 
-        .primary-btn { 
-            width: 100%; 
-            padding: 15px; 
-            border-radius: 14px; 
-            font-size: 16px; 
-            font-weight: 700; 
-            border: none; 
-            cursor: pointer; 
-            background: linear-gradient(135deg, #ffe066, #f5af19); 
-            color: #3b2300; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); 
-            transition: transform 0.1s ease;
+        .custom-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .custom-input:focus {
+            border-color: var(--gold-main);
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.08);
+        }
+
+        .custom-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .custom-input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            color: #1a1200;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(255,215,0,0.2);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
         }
 
         .primary-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
-        .primary-btn:disabled { 
-            background: #1c2638 !important; 
-            color: var(--text-muted) !important; 
-            box-shadow: none !important; 
+        .primary-btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
-        .game-header { 
-            padding: 20px; 
-            border-bottom: 1px solid var(--border-color); 
-            text-align: center; 
-            background: rgba(0,0,0,0.15); 
+        .primary-btn.danger {
+            background: linear-gradient(135deg, #ff4d6a, #cc0033);
+            color: #fff;
+            box-shadow: 0 4px 25px rgba(255,77,106,0.2);
         }
 
-        .balance-badge { 
-            background: rgba(255, 215, 0, 0.08); 
-            border: 1px dashed rgba(255, 215, 0, 0.3); 
-            border-radius: 12px; 
-            padding: 10px 16px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-top: 10px; 
+        /* ===== MAIN GAME UI ===== */
+        .game-header {
+            padding: 16px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
         }
 
-        .balance-amount { 
-            font-size: 20px; 
-            color: var(--gold); 
-            font-weight: 700; 
+        .game-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* 3D Coin Animation Core styling */
-        .coin-box { 
-            perspective: 1000px; 
-            margin: 35px auto; 
-            width: 130px; 
-            height: 130px; 
+        .game-header-top .player-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
         }
 
-        .coin-element { 
-            width: 100%; 
-            height: 100%; 
-            position: relative; 
-            transform-style: preserve-3d; 
-            transition: transform 0.1s linear; 
+        .game-header-top .player-name span {
+            color: var(--gold-main);
         }
 
-        .coin-side { 
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 50%; 
-            backface-visibility: hidden; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-size: 22px; 
-            font-weight: 800; 
-            border: 4px solid; 
+        .balance-card {
+            background: rgba(255,215,0,0.04);
+            border: 1px solid rgba(255,215,0,0.08);
+            border-radius: 14px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
         }
 
-        .side-gold { 
-            background: linear-gradient(135deg, #ffe680, #cc9900); 
-            color: #3b2300; 
-            border-color: #ffe680; 
+        .balance-card .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .side-silver { 
-            background: linear-gradient(135deg, #ffffff, #999999); 
-            color: #222; 
-            border-color: #ffffff; 
-            transform: rotateY(180deg); 
+        .balance-card .amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gold-main);
         }
 
-        .selectors-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-            margin-bottom: 20px; 
+        .balance-card .amount .currency {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-right: 2px;
         }
 
-        .select-btn { 
-            padding: 14px; 
-            font-size: 15px; 
-            font-weight: 700; 
-            border-radius: 14px; 
-            border: 1px solid var(--border-color); 
-            background: rgba(255,255,255,0.02); 
-            color: var(--text-muted); 
-            cursor: pointer; 
-            transition: all 0.2s ease;
+        /* ===== 3D COIN ===== */
+        .coin-container {
+            perspective: 800px;
+            width: 140px;
+            height: 140px;
+            margin: 20px auto;
         }
 
-        .select-btn.gold-style.active { 
-            background: linear-gradient(135deg, #ffe066, #f5af19); 
-            color: #3b2300; 
-            border-color: var(--gold); 
+        .coin-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear;
         }
 
-        .select-btn.silver-style.active { 
-            background: linear-gradient(135deg, #ffffff, #b0b0b0); 
-            color: #222; 
-            border-color: #fff; 
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            border: 4px solid;
         }
 
-        .status-box { 
-            margin-top: 15px; 
-            font-size: 15px; 
-            font-weight: 600; 
-            text-align: center; 
-            min-height: 24px; 
+        .coin-face.gold {
+            background: radial-gradient(ellipse at 40% 30%, #ffe680, #c99f00);
+            color: #3b2300;
+            border-color: #ffe680;
+            box-shadow: inset 0 -20px 40px rgba(0,0,0,0.2), 0 0 30px rgba(255,215,0,0.15);
         }
 
-        .text-win { color: var(--success); text-shadow: 0 0 8px rgba(0,230,118,0.3); }
-        .text-lose { color: var(--danger); text-shadow: 0 0 8px rgba(255,77,77,0.3); }
-
-        .navigation-bar { 
-            display: flex; 
-            border-top: 1px solid var(--border-color); 
-            background: rgba(7, 12, 24, 0.95); 
-            margin-top: auto; 
+        .coin-face.silver {
+            background: radial-gradient(ellipse at 40% 30%, #ffffff, #9e9e9e);
+            color: #222;
+            border-color: #ffffff;
+            transform: rotateY(180deg);
+            box-shadow: inset 0 -20px 40px rgba(0,0,0,0.15);
         }
 
-        .nav-item { 
-            flex: 1; 
-            padding: 16px; 
-            background: none; 
-            border: none; 
-            color: var(--text-muted); 
-            font-weight: 700; 
-            font-size: 13px; 
-            cursor: pointer; 
-            text-align: center; 
+        /* ===== SELECTION BUTTONS ===== */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .nav-item.active { 
-            color: var(--gold); 
-            background: rgba(255,255,255,0.02); 
+        .select-btn {
+            padding: 14px;
+            border: 2px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            background: rgba(0,0,0,0.25);
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-btn.gold.active {
+            background: rgba(255,215,0,0.12);
+            border-color: var(--gold-main);
+            color: var(--gold-main);
+            box-shadow: 0 0 30px rgba(255,215,0,0.05);
+        }
+
+        .select-btn.silver.active {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--silver-main);
+            color: var(--silver-main);
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+        }
+
+        /* ===== STATUS ===== */
+        .status-box {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            min-height: 28px;
+            margin-top: 12px;
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .status-box.win { color: var(--success); }
+        .status-box.lose { color: var(--danger); }
+        .status-box.waiting { color: var(--warning); }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            display: flex;
+            background: rgba(0,0,0,0.4);
+            border-top: 1px solid rgba(255,255,255,0.03);
+            margin-top: auto;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .nav-item .nav-icon {
+            display: block;
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: var(--gold-main);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: var(--gold-gradient);
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* ===== DEPOSIT / WITHDRAW ===== */
+        .section-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gold-main);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle b {
+            color: var(--text-primary);
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 4px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 420px) {
+            .app-wrapper { border-radius: 16px; }
+            .view-section { padding: 16px; }
+            .coin-container { width: 110px; height: 110px; }
+            .coin-face { font-size: 18px; border-width: 3px; }
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 14px;
+            background: rgba(13, 26, 48, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,215,0,0.1);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 8px;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+            pointer-events: auto;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+        .toast.warning { border-color: var(--warning); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        }
+
+        /* ===== LOADING SHIMMER ===== */
+        .shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <!-- View 1: Auth Module -->
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- ===== APP WRAPPER ===== -->
+<div class="app-wrapper" id="appWrapper">
+
+    <!-- ========== AUTH VIEW ========== -->
     <div id="authView" class="view-section active">
-        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold); font-weight: 800; letter-spacing: 1px;">SILVERGOLD</h2>
-        
-        <div class="auth-tabs">
-            <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuthMode('login')">LOGIN</button>
-            <button class="auth-tab-btn" id="tabSignup" onclick="toggleAuthMode('signup')">SIGN UP</button>
+        <div class="auth-logo">
+            <h1>⚜️ GOLDSILVER</h1>
+            <div class="subtitle">Premier Gaming Platform</div>
         </div>
 
-        <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
-        <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
-        
-        <!-- Referral Code Input Architecture Integration -->
-        <input type="text" id="referralInput" class="custom-input" placeholder="Referral Code (Optional)" style="display: none;">
-        
-        <button class="primary-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Log In</button>
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuth('login')">🔐 Login</button>
+            <button class="auth-tab-btn" id="tabSignup" onclick="toggleAuth('signup')">✨ Sign Up</button>
+        </div>
+
+        <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input type="text" id="usernameInput" class="custom-input" placeholder="Username" autocomplete="username">
+        </div>
+
+        <div class="input-group">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="passwordInput" class="custom-input" placeholder="Password" autocomplete="current-password">
+        </div>
+
+        <div class="input-group" id="referralGroup" style="display:none;">
+            <span class="input-icon">🎁</span>
+            <input type="text" id="referralInput" class="custom-input" placeholder="Referral Code (Optional)">
+        </div>
+
+        <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">🚀 Login</button>
+
+        <div style="text-align:center; margin-top: 16px; font-size:12px; color:var(--text-muted);">
+            By continuing, you agree to our Terms & Privacy Policy
+        </div>
     </div>
 
-    <!-- View 2: Main Operational System -->
-    <div id="mainView" style="display: none; flex-direction: column; height: 100%; flex: 1;">
-        <div class="game-header">
-            <h3 id="userTitle">PLAYER</h3>
-            <div class="balance-badge">
-                <span>WALLET BALANCE</span>
-                <span class="balance-amount">₹<span id="userBalance">0.00</span></span>
-            </div>
-        </div>
+    <!-- ========== MAIN VIEW ========== -->
+    <div id="mainView" style="display:none; flex-direction:column; flex:1;">
 
-        <!-- Tab A: The Game Core -->
-        <div id="gameTab" class="view-section active">
-            <div class="coin-box">
-                <div class="coin-element" id="gameCoin">
-                    <div class="coin-side side-gold">GOLD</div>
-                    <div class="coin-side side-silver">SILVER</div>
+        <!-- Header -->
+        <div class="game-header">
+            <div class="game-header-top">
+                <div class="player-name">👋 Hi, <span id="userTitle">Player</span></div>
+                <div style="font-size:12px; color:var(--text-muted);">⚡ LIVE</div>
+            </div>
+            <div class="balance-card">
+                <div>
+                    <div class="label">💰 Wallet Balance</div>
+                </div>
+                <div class="amount">
+                    <span class="currency">₹</span><span id="userBalance">0.00</span>
                 </div>
             </div>
-            <div class="selectors-grid">
-                <button class="select-btn gold-style active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
-                <button class="select-btn silver-style" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
+        </div>
+
+        <!-- ===== GAME TAB ===== -->
+        <div id="gameTab" class="view-section active">
+            <div class="coin-container">
+                <div class="coin-3d" id="gameCoin">
+                    <div class="coin-face gold">⚜️ GOLD</div>
+                    <div class="coin-face silver">⬜ SILVER</div>
+                </div>
             </div>
-            <input type="number" class="custom-input" id="betAmount" value="50" min="10">
-            <button class="primary-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
-            <div class="status-box" id="resultMsg">Enter bet and Spin!</div>
+
+            <div class="selection-grid">
+                <button class="select-btn gold active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
+                <button class="select-btn silver" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">🎯</span>
+                <input type="number" class="custom-input" id="betAmount" value="50" min="10" step="10">
+            </div>
+
+            <button class="primary-btn" id="spinBtn" onclick="playGame()">🎰 SPIN COIN</button>
+            <div class="status-box" id="resultMsg">💡 Place your bet & spin!</div>
         </div>
 
-        <!-- Tab B: Manual Deposit Pipeline -->
+        <!-- ===== DEPOSIT TAB ===== -->
         <div id="depositTab" class="view-section">
-            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">DEPOSIT MONEY</h3>
-            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff; user-select: text;" id="merchantUpiId">loading_merchant_upi...</b></p>
-            <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)">
-            <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Ref No.">
-            <button class="primary-btn" onclick="requestDeposit()">Submit Deposit</button>
+            <div class="section-title">💰 Deposit Funds</div>
+            <div class="section-subtitle">
+                Pay via UPI: <b id="merchantUpiId">loading...</b>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">💵</span>
+                <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)" min="10">
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">📋</span>
+                <input type="text" id="depUtr" class="custom-input" placeholder="12-Digit UTR / Reference No." maxlength="12">
+            </div>
+
+            <button class="primary-btn" onclick="requestDeposit()">📤 Submit Deposit</button>
+            <div style="text-align:center; margin-top:12px; font-size:12px; color:var(--text-muted);">
+                ⏳ Admin will approve within 24 hours
+            </div>
         </div>
 
-        <!-- Tab C: Manual Withdrawal Pipeline -->
+        <!-- ===== WITHDRAW TAB ===== -->
         <div id="withdrawTab" class="view-section">
-            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">WITHDRAW MONEY</h3>
-            <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">*न्यूनतम निकासी राशि ₹100 है।</p>
-            <input type="number" id="witAmount" class="custom-input" placeholder="Amount to Withdraw (₹)">
-            <input type="text" id="witUpi" class="custom-input" placeholder="Enter Your UPI ID">
-            <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);" onclick="requestWithdraw()">Request Withdrawal</button>
+            <div class="section-title">💸 Withdraw Funds</div>
+            <div class="section-subtitle">Minimum withdrawal: <b>₹100</b></div>
+
+            <div class="input-group">
+                <span class="input-icon">💵</span>
+                <input type="number" id="witAmount" class="custom-input" placeholder="Amount (₹)" min="100">
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">📱</span>
+                <input type="text" id="witUpi" class="custom-input" placeholder="Your UPI ID (e.g., name@upi)">
+            </div>
+
+            <button class="primary-btn danger" onclick="requestWithdraw()">📤 Request Withdrawal</button>
+            <div style="text-align:center; margin-top:12px; font-size:12px; color:var(--text-muted);">
+                ⏳ Processing time: 12-24 hours
+            </div>
         </div>
 
-        <!-- Global Navigation -->
-        <div class="navigation-bar">
-            <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
-            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">💰 Deposit</button>
-            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">💸 Withdraw</button>
+        <!-- ===== BOTTOM NAV ===== -->
+        <div class="bottom-nav">
+            <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">
+                <span class="nav-icon">🎮</span>
+                Play
+            </button>
+            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">
+                <span class="nav-icon">💰</span>
+                Deposit
+            </button>
+            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">
+                <span class="nav-icon">💸</span>
+                Withdraw
+            </button>
         </div>
     </div>
 </div>
 
 <script>
-    // System Initialization & Configurations
-    const firebaseConfig = {
-        apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
-        authDomain: "silvergold-dbe2f.firebaseapp.com",
-        databaseURL: "https://silvergold-dbe2f-default-rtdb.firebaseio.com",
-        projectId: "silvergold-dbe2f",
-        storageBucket: "silvergold-dbe2f.firebasestorage.app",
-        messagingSenderId: "14714045042",
-        appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+// ============================================================
+// 🔥 FIREBASE CONFIGURATION
+// ============================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
+    authDomain: "silvergold-dbe2f.firebaseapp.com",
+    databaseURL: "https://silvergold-dbe2f-default-rtdb.firebaseio.com",
+    projectId: "silvergold-dbe2f",
+    storageBucket: "silvergold-dbe2f.firebasestorage.app",
+    messagingSenderId: "14714045042",
+    appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
+};
 
-    let currentUser = "";
-    let userBalance = 0;
-    let selectedChoice = "Gold";
-    let isSpinning = false;
-    let authMode = "login";
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    // Live listening to Admin Merchant Controls from Database
-    function listenToSystemConfig() {
-        database.ref('system/config/merchantUpi').on('value', snapshot => {
-            const upi = snapshot.val() || "pay.silvergold@ybl";
-            document.getElementById('merchantUpiId').innerText = upi;
-        });
+// ============================================================
+// 🧠 APPLICATION STATE
+// ============================================================
+const state = {
+    currentUser: '',
+    balance: 0,
+    selectedChoice: 'Gold',
+    isSpinning: false,
+    authMode: 'login',
+    betAmount: 50,
+    userRef: null,
+    balanceListener: null,
+};
+
+// ============================================================
+// 🔔 TOAST SYSTEM
+// ============================================================
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ============================================================
+// 🔐 AUTHENTICATION
+// ============================================================
+function toggleAuth(mode) {
+    state.authMode = mode;
+    document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+    document.getElementById('referralGroup').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '🚀 Login' : '✨ Create Account';
+}
+
+function handleAuth() {
+    const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+    const password = document.getElementById('passwordInput').value.trim();
+    const referral = document.getElementById('referralInput').value.trim();
+
+    // Validation
+    if (!username || username.length < 3) {
+        showToast('Username must be at least 3 characters', 'error');
+        return;
+    }
+    if (!password || password.length < 4) {
+        showToast('Password must be at least 4 characters', 'error');
+        return;
     }
 
-    function toggleAuthMode(mode) {
-        authMode = mode;
-        document.getElementById('tabLogin').classList.remove('active');
-        document.getElementById('tabSignup').classList.remove('active');
-        
-        if (mode === 'login') {
-            document.getElementById('tabLogin').classList.add('active');
-            document.getElementById('authSubmitBtn').innerText = "Log In";
-            document.getElementById('referralInput').style.display = 'none';
-        } else {
-            document.getElementById('tabSignup').classList.add('active');
-            document.getElementById('authSubmitBtn').innerText = "Sign Up (Register)";
-            document.getElementById('referralInput').style.display = 'block';
-        }
-    }
+    const userRef = db.ref('users/' + username);
 
-    function handleAuthSubmit() {
-        const username = document.getElementById('usernameInput').value.trim().toLowerCase();
-        const password = document.getElementById('passwordInput').value.trim();
-        const refCode = document.getElementById('referralInput').value.trim();
+    if (state.authMode === 'signup') {
+        // SIGN UP
+        userRef.once('value').then(snap => {
+            if (snap.exists()) {
+                showToast('Username already taken!', 'error');
+                return;
+            }
 
-        if (!username || username.length < 3 || !password || password.length < 4) {
-            alert("कृपया सही यूजरनेम (min 3 अक्षर) और पासवर्ड (min 4 अक्षर) डालें!");
-            return;
-        }
+            const refCode = username + Math.floor(1000 + Math.random() * 9000);
+            const payload = {
+                password: password,
+                balance: 50,
+                myReferralCode: refCode,
+                createdAt: Date.now(),
+                lastActive: Date.now(),
+                isBanned: false,
+                role: 'user'
+            };
 
-        database.ref('users/' + username).once('value', snapshot => {
-            if (authMode === 'signup') {
-                if (snapshot.exists()) {
-                    alert("यह यूजरनेम पहले से मौजूद है! कृपया दूसरा चुनें।");
-                } else {
-                    const cleanRefCode = username + Math.floor(1000 + Math.random() * 9000);
-                    
-                    // Secure registration atomic execution pipeline
-                    const registrationPayload = {
-                        password: password,
-                        balance: 50,
-                        myReferralCode: cleanRefCode,
-                        timestamp: Date.now()
-                    };
-
-                    database.ref('users/' + username).set(registrationPayload).then(() => {
-                        currentUser = username;
-                        alert(`अकाउंट बन गया! वेलकम बोनस ₹50 मिल गया है।`);
-                        
-                        // Referral Validation and Trigger Process
-                        if (refCode.length > 0) {
-                            processReferralTracking(refCode, username);
-                        }
-                        
-                        enterApp();
-                    });
+            return userRef.set(payload).then(() => {
+                showToast('✅ Account created! Welcome bonus ₹50 added!', 'success');
+                if (referral.length > 0) {
+                    processReferral(referral, username);
                 }
+                enterApp(username);
+            });
+        }).catch(err => {
+            showToast('Error: ' + err.message, 'error');
+        });
+
+    } else {
+        // LOGIN
+        userRef.once('value').then(snap => {
+            if (!snap.exists()) {
+                showToast('User not found! Please sign up first.', 'error');
+                return;
+            }
+
+            const data = snap.val();
+            if (data.isBanned) {
+                showToast('⛔ Your account has been banned.', 'error');
+                return;
+            }
+
+            if (data.password === password) {
+                showToast('✅ Welcome back, ' + username + '!', 'success');
+                enterApp(username);
             } else {
-                if (!snapshot.exists()) {
-                    alert("यह यूजरनेम मौजूद नहीं है! पहले SIGN UP करें।");
+                showToast('❌ Incorrect password!', 'error');
+            }
+        }).catch(err => {
+            showToast('Error: ' + err.message, 'error');
+        });
+    }
+}
+
+// ============================================================
+// 🔗 REFERRAL SYSTEM
+// ============================================================
+function processReferral(code, newUser) {
+    db.ref('users').once('value').then(snap => {
+        let found = false;
+        snap.forEach(child => {
+            const data = child.val();
+            if (data.myReferralCode === code) {
+                found = true;
+                const referrer = child.key;
+                const currentBal = data.balance || 0;
+                db.ref('users/' + referrer).update({ balance: currentBal + 20 });
+                db.ref('referralLogs').push({
+                    referrer: referrer,
+                    referee: newUser,
+                    bonusCredited: 20,
+                    timestamp: Date.now()
+                });
+                showToast('🎁 Referral bonus ₹20 credited to ' + referrer, 'success');
+            }
+        });
+        if (!found) {
+            showToast('Referral code not found, but welcome!', 'warning');
+        }
+    });
+}
+
+// ============================================================
+// 🚀 ENTER APP
+// ============================================================
+function enterApp(username) {
+    state.currentUser = username;
+    document.getElementById('authView').classList.remove('active');
+    document.getElementById('mainView').style.display = 'flex';
+    document.getElementById('userTitle').textContent = username.toUpperCase();
+
+    // Listen to balance
+    if (state.balanceListener) state.balanceListener();
+    state.balanceListener = db.ref('users/' + username + '/balance').on('value', snap => {
+        state.balance = snap.val() || 0;
+        document.getElementById('userBalance').textContent = state.balance.toFixed(2);
+    });
+
+    // Listen to merchant UPI
+    db.ref('system/config/merchantUpi').on('value', snap => {
+        document.getElementById('merchantUpiId').textContent = snap.val() || 'pay.silvergold@ybl';
+    });
+
+    // Listen to admin force outcome
+    db.ref('system/forceOutcome').on('value', snap => {
+        // Admin force outcome is read during play
+    });
+}
+
+// ============================================================
+// 🎮 GAME LOGIC
+// ============================================================
+function selectChoice(choice) {
+    if (state.isSpinning) return;
+    state.selectedChoice = choice;
+    document.getElementById('chooseGold').classList.toggle('active', choice === 'Gold');
+    document.getElementById('chooseSilver').classList.toggle('active', choice === 'Silver');
+}
+
+function switchTab(tab) {
+    ['game', 'deposit', 'withdraw'].forEach(t => {
+        document.getElementById(t + 'Tab').classList.toggle('active', t === tab);
+        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab').classList.toggle('active', t === tab);
+    });
+}
+
+function playGame() {
+    if (state.isSpinning) return;
+
+    const bet = parseFloat(document.getElementById('betAmount').value);
+    if (isNaN(bet) || bet < 10) {
+        showToast('Minimum bet is ₹10', 'error');
+        return;
+    }
+    if (bet > state.balance) {
+        showToast('Insufficient balance!', 'error');
+        return;
+    }
+
+    state.isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+    document.getElementById('resultMsg').className = 'status-box waiting';
+    document.getElementById('resultMsg').textContent = '🔄 Spinning...';
+
+    // Deduct bet
+    db.ref('users/' + state.currentUser + '/balance').set(state.balance - bet);
+
+    // Log bet
+    const betRef = db.ref('bets').push();
+    betRef.set({
+        username: state.currentUser,
+        betAmount: bet,
+        choice: state.selectedChoice,
+        status: 'ACTIVE',
+        timestamp: Date.now()
+    });
+
+    // Get admin force outcome
+    db.ref('system/forceOutcome').once('value').then(snap => {
+        let result = snap.val() || 'Auto';
+        if (result === 'Auto') {
+            result = Math.random() < 0.5 ? 'Gold' : 'Silver';
+        }
+
+        // Animate coin
+        const coin = document.getElementById('gameCoin');
+        let deg = 0;
+        let spins = 12;
+
+        const interval = setInterval(() => {
+            deg += 72;
+            coin.style.transform = `rotateY(${deg}deg)`;
+            spins--;
+
+            if (spins <= 0) {
+                clearInterval(interval);
+                const finalDeg = result === 'Gold' ? 0 : 180;
+                coin.style.transform = `rotateY(${finalDeg}deg)`;
+
+                const msg = document.getElementById('resultMsg');
+                if (state.selectedChoice === result) {
+                    const winAmount = bet * 1.8;
+                    const newBal = state.balance + winAmount;
+                    db.ref('users/' + state.currentUser + '/balance').set(newBal);
+                    msg.className = 'status-box win';
+                    msg.textContent = `🎉 WIN! Result: ${result}. Won ₹${winAmount.toFixed(2)}`;
+                    showToast(`🎉 You won ₹${winAmount.toFixed(2)}!`, 'success');
                 } else {
-                    if (snapshot.val().password === password) {
-                        currentUser = username;
-                        enterApp();
-                    } else {
-                        alert("गलत पासवर्ड! कृपया सही पासवर्ड डालें।");
-                    }
+                    msg.className = 'status-box lose';
+                    msg.textContent = `❌ LOSE! Result: ${result}. Better luck next time!`;
                 }
+
+                betRef.update({ status: 'COMPLETED', outcome: result });
+                state.isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
             }
-        });
+        }, 120);
+    });
+}
+
+// ============================================================
+// 💰 DEPOSIT
+// ============================================================
+function requestDeposit() {
+    const amount = parseFloat(document.getElementById('depAmount').value);
+    const utr = document.getElementById('depUtr').value.trim();
+
+    if (isNaN(amount) || amount < 10) {
+        showToast('Minimum deposit is ₹10', 'error');
+        return;
+    }
+    if (utr.length < 6) {
+        showToast('Please enter a valid UTR number', 'error');
+        return;
     }
 
-    function processReferralTracking(code, secondaryUser) {
-        database.ref('users').once('value', snapshot => {
-            let codeFound = false;
-            snapshot.forEach(child => {
-                if (child.val().myReferralCode === code) {
-                    codeFound = true;
-                    const primaryUser = child.key;
-                    const currentBal = child.val().balance || 0;
-                    
-                    // Credit 20 Coins configuration to Referrer
-                    database.ref('users/' + primaryUser).update({
-                        balance: currentBal + 20
-                    });
+    db.ref('depositRequests').push({
+        username: state.currentUser,
+        amount: amount,
+        utr: utr,
+        status: 'pending',
+        timestamp: Date.now()
+    }).then(() => {
+        showToast('✅ Deposit request submitted! Await admin approval.', 'success');
+        document.getElementById('depAmount').value = '';
+        document.getElementById('depUtr').value = '';
+    }).catch(err => {
+        showToast('Error: ' + err.message, 'error');
+    });
+}
 
-                    // Log in system ledger for audit trail
-                    database.ref('referralLogs').push().set({
-                        referrer: primaryUser,
-                        referee: secondaryUser,
-                        bonusCredited: 20,
-                        timestamp: Date.now()
-                    });
-                }
-            });
-        });
+// ============================================================
+// 💸 WITHDRAW
+// ============================================================
+function requestWithdraw() {
+    const amount = parseFloat(document.getElementById('witAmount').value);
+    const upi = document.getElementById('witUpi').value.trim();
+
+    if (isNaN(amount) || amount < 100) {
+        showToast('Minimum withdrawal is ₹100', 'error');
+        return;
+    }
+    if (!upi.includes('@') || upi.length < 5) {
+        showToast('Please enter a valid UPI ID', 'error');
+        return;
+    }
+    if (amount > state.balance) {
+        showToast('Insufficient balance!', 'error');
+        return;
     }
 
-    function enterApp() {
-        listenToSystemConfig();
-        database.ref('users/' + currentUser).on('value', snap => {
-            if(snap.exists()) {
-                userBalance = snap.val().balance;
-                document.getElementById('userBalance').innerText = userBalance.toFixed(2);
-            }
-        });
-        document.getElementById('authView').classList.remove('active');
-        document.getElementById('mainView').style.display = 'flex';
-        document.getElementById('userTitle').innerText = currentUser.toUpperCase();
-    }
-
-    function selectChoice(choice) {
-        if (isSpinning) return;
-        selectedChoice = choice;
-        document.getElementById('chooseGold').classList.remove('active');
-        document.getElementById('chooseSilver').classList.remove('active');
-        if (choice === 'Gold') document.getElementById('chooseGold').classList.add('active');
-        else document.getElementById('chooseSilver').classList.add('active');
-    }
-
-    function switchTab(tab) {
-        document.getElementById('gameTab').classList.remove('active');
-        document.getElementById('depositTab').classList.remove('active');
-        document.getElementById('withdrawTab').classList.remove('active');
-        document.getElementById('btnGameTab').classList.remove('active');
-        document.getElementById('btnDepositTab').classList.remove('active');
-        document.getElementById('btnWithdrawTab').classList.remove('active');
-
-        if (tab === 'game') { 
-            document.getElementById('gameTab').classList.add('active'); 
-            document.getElementById('btnGameTab').classList.add('active'); 
-        } else if (tab === 'deposit') { 
-            document.getElementById('depositTab').classList.add('active'); 
-            document.getElementById('btnDepositTab').classList.add('active'); 
-        } else { 
-            document.getElementById('withdrawTab').classList.add('active'); 
-            document.getElementById('btnWithdrawTab').classList.add('active'); 
-        }
-    }
-
-    function requestDeposit() {
-        const amt = parseFloat(document.getElementById('depAmount').value);
-        const utr = document.getElementById('depUtr').value.trim();
-        if (isNaN(amt) || amt < 10 || utr.length < 6) { 
-            alert("कृपया सही राशि और यूटीआर नंबर डालें!"); 
-            return; 
-        }
-        
-        database.ref('depositRequests').push().set({ 
-            username: currentUser, 
-            amount: amt, 
-            utr: utr, 
-            status: 'pending', 
-            timestamp: Date.now() 
-        })
-        .then(() => { 
-            alert("डिपॉजिट अनुरोध सफलतापूर्वक सबमिट किया गया! एडमिन मंजूरी की प्रतीक्षा करें।"); 
-            document.getElementById('depAmount').value = ''; 
-            document.getElementById('depUtr').value = ''; 
-        });
-    }
-
-    function requestWithdraw() {
-        const amt = parseFloat(document.getElementById('witAmount').value);
-        const upi = document.getElementById('witUpi').value.trim();
-        if (isNaN(amt) || amt < 100) { alert("न्यूनतम निकासी राशि ₹100 है!"); return; }
-        if (upi.length < 5 || !upi.includes('@')) { alert("वैध यूपीआई आईडी दर्ज करें!"); return; }
-        if (amt > userBalance) { alert("अपर्याप्त वॉलेट बैलेंस!"); return; }
-
-        // Deduct upfront & push to pending withdrawal ledger
-        database.ref('users/' + currentUser).update({ balance: userBalance - amt }).then(() => {
-            database.ref('withdrawRequests').push().set({ 
-                username: currentUser, 
-                amount: amt, 
-                upi: upi, 
-                status: 'pending', 
-                timestamp: Date.now() 
-            })
-            .then(() => { 
-                alert("निकासी अनुरोध सबमिट हो गया!"); 
-                document.getElementById('witAmount').value = ''; 
-                document.getElementById('witUpi').value = ''; 
-            });
-        });
-    }
-
-    function playGame() {
-        if (isSpinning) return;
-        const bet = parseFloat(document.getElementById('betAmount').value);
-        if (isNaN(bet) || bet < 10 || bet > userBalance) { 
-            alert("बैलेंस या न्यूनतम बेट (₹10) चेक करें!"); 
-            return; 
-        }
-
-        isSpinning = true;
-        document.getElementById('spinBtn').disabled = true;
-        
-        // Log user bet placement transaction
-        database.ref('users/' + currentUser).update({ balance: userBalance - bet });
-        
-        const activeBetRef = database.ref('bets').push();
-        activeBetRef.set({
-            username: currentUser,
-            betAmount: bet,
-            choice: selectedChoice,
-            status: "ACTIVE",
+    // Deduct balance
+    db.ref('users/' + state.currentUser + '/balance').set(state.balance - amount).then(() => {
+        return db.ref('withdrawRequests').push({
+            username: state.currentUser,
+            amount: amount,
+            upi: upi,
+            status: 'pending',
             timestamp: Date.now()
         });
+    }).then(() => {
+        showToast('✅ Withdrawal request submitted!', 'success');
+        document.getElementById('witAmount').value = '';
+        document.getElementById('witUpi').value = '';
+    }).catch(err => {
+        showToast('Error: ' + err.message, 'error');
+    });
+}
 
-        // Pull Administrative Force controls in Real-Time
-        database.ref('system/forceOutcome').once('value', snapshot => {
-            let result = snapshot.val() || 'Auto';
-            if (result === 'Auto') { 
-                result = Math.random() < 0.5 ? 'Gold' : 'Silver'; 
-            }
+// ============================================================
+// 🛡️ SECURITY: Prevent Screenshots (Optional, but good practice)
+// ============================================================
+if (typeof document !== 'undefined') {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'PrintScreen') {
+            showToast('📸 Screenshots are disabled for security', 'warning');
+            return false;
+        }
+    });
 
-            const coin = document.getElementById('gameCoin');
-            let deg = 0, spins = 15;
-            
-            const interval = setInterval(() => {
-                deg += 60; 
-                coin.style.transform = `rotateY(${deg}deg)`; 
-                spins--;
-                
-                if (spins <= 0) {
-                    clearInterval(interval);
-                    coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
-                    const msg = document.getElementById('resultMsg');
-                    
-                    if (selectedChoice === result) {
-                        const winAmt = bet * 1.8;
-                        database.ref('users/' + currentUser).update({ balance: userBalance + winAmt });
-                        msg.innerHTML = `<span class="text-win">🎉 WIN! Result: ${result.toUpperCase()}. Won ₹${winAmt.toFixed(2)}</span>`;
-                    } else {
-                        msg.innerHTML = `<span class="text-lose">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
-                    }
-                    
-                    activeBetRef.update({ status: "COMPLETED", systemOutcome: result });
-                    isSpinning = false; 
-                    document.getElementById('spinBtn').disabled = false;
-                }
-            }, 100);
-        });
-    }
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Disable keyboard shortcuts for screenshots
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && (e.key === 'p' || e.key === 'P')) {
+            e.preventDefault();
+            showToast('🖨️ Print is disabled', 'warning');
+        }
+    });
+}
+
+// ============================================================
+// 📱 INIT
+// ============================================================
+console.log('⚜️ GoldSilver Premium Edition loaded.');
+console.log('🔥 Firebase connected:', firebase.app().name);
+console.log('👤 Ready for authentication.');
+
+// Auto-focus on username
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('usernameInput').focus();
+});
 </script>
 </body>
 </html>
