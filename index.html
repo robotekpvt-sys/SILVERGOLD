@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚜️ GoldSilver - Professional Edition</title>
+    <title>🔒 GoldSilver Secure</title>
     
-    <!-- Firebase SDK -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <style>
-        /* ============================================================
-           PROFESSIONAL CSS VARIABLES
-           ============================================================ */
+        /* ===== PREMIUM SECURE STYLES ===== */
         :root {
             --bg-primary: #0a0e1a;
             --bg-secondary: #111827;
             --bg-card: rgba(17, 24, 39, 0.9);
-            --bg-card-hover: rgba(31, 41, 55, 0.8);
             --gold-primary: #fbbf24;
             --gold-gradient: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
-            --gold-glow: rgba(251, 191, 36, 0.15);
-            --silver-primary: #e5e7eb;
             --text-primary: #f3f4f6;
             --text-secondary: #9ca3af;
             --text-muted: #4b5563;
@@ -30,15 +27,9 @@
             --danger: #f87171;
             --warning: #fbbf24;
             --shadow-premium: 0 8px 32px rgba(0,0,0,0.6);
-            --shadow-glow: 0 0 40px rgba(251, 191, 36, 0.08);
             --radius-premium: 20px;
-            --radius-card: 16px;
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ============================================================
-           RESET & BASE
-           ============================================================ */
         * { 
             margin: 0; 
             padding: 0; 
@@ -50,9 +41,6 @@
         body {
             font-family: -apple-system, 'Inter', 'Segoe UI', sans-serif;
             background: var(--bg-primary);
-            background-image: 
-                radial-gradient(ellipse at 20% 50%, rgba(251, 191, 36, 0.02) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(251, 191, 36, 0.015) 0%, transparent 50%);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -61,9 +49,6 @@
             padding: 12px;
         }
 
-        /* ============================================================
-           APP WRAPPER
-           ============================================================ */
         .app-wrapper {
             width: 100%;
             max-width: 420px;
@@ -72,75 +57,50 @@
             border: 1px solid rgba(255,255,255,0.04);
             box-shadow: var(--shadow-premium);
             overflow: hidden;
-            position: relative;
             min-height: 700px;
             display: flex;
             flex-direction: column;
         }
 
-        .app-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -150px;
-            right: -150px;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.04) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .app-wrapper::after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.025) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* ============================================================
-           VIEW SECTIONS
-           ============================================================ */
         .view-section {
             display: none;
             padding: 20px;
             flex: 1;
-            animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 1;
+            animation: fadeSlide 0.3s ease;
         }
 
-        .view-section.active {
-            display: block;
-        }
+        .view-section.active { display: block; }
 
         @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(16px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============================================================
-           AUTH SCREEN - PROFESSIONAL
-           ============================================================ */
+        /* ===== SECURE BADGE ===== */
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* ===== AUTH ===== */
         .auth-container {
             display: flex;
             flex-direction: column;
-            min-height: 600px;
+            min-height: 550px;
             justify-content: center;
-            padding: 10px 0;
         }
 
         .auth-brand {
             text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .auth-brand .logo-icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 8px;
+            margin-bottom: 28px;
         }
 
         .auth-brand h1 {
@@ -150,16 +110,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 1px;
         }
 
         .auth-brand .tagline {
             font-size: 12px;
             color: var(--text-secondary);
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 4px;
-            -webkit-text-fill-color: var(--text-secondary);
         }
 
         .auth-tabs {
@@ -167,7 +124,7 @@
             background: rgba(0,0,0,0.3);
             border-radius: 14px;
             padding: 4px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             border: 1px solid var(--border-color);
         }
 
@@ -181,7 +138,7 @@
             font-size: 13px;
             border-radius: 12px;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
         }
 
         .auth-tab-btn.active {
@@ -212,17 +169,13 @@
             border-radius: 14px;
             color: var(--text-primary);
             font-size: 15px;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
             outline: none;
         }
 
         .custom-input:focus {
             border-color: var(--gold-primary);
             box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.06);
-        }
-
-        .custom-input::placeholder {
-            color: var(--text-muted);
         }
 
         .primary-btn {
@@ -235,15 +188,12 @@
             background: var(--gold-gradient);
             color: #1a1200;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
             box-shadow: 0 4px 25px rgba(251, 191, 36, 0.2);
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
         }
 
         .primary-btn:active { transform: scale(0.97); }
-        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .primary-btn.danger {
             background: linear-gradient(135deg, #f87171, #dc2626);
@@ -257,101 +207,16 @@
             box-shadow: 0 4px 25px rgba(52, 211, 153, 0.2);
         }
 
-        .auth-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* ============================================================
-           HEADER - PROFESSIONAL
-           ============================================================ */
-        .app-header {
-            padding: 16px 20px;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-            z-index: 2;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-user .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--gold-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            color: #1a1200;
-        }
-
-        .header-user .user-info .name {
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-primary);
-        }
-
-        .header-user .user-info .status {
-            font-size: 10px;
-            color: var(--success);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .header-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.03);
-            color: var(--text-secondary);
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-btn:active { transform: scale(0.92); }
-
-        /* Balance Card */
+        /* ===== BALANCE CARD ===== */
         .balance-card {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.02));
-            border: 1px solid rgba(251, 191, 36, 0.1);
-            border-radius: var(--radius-card);
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.08);
+            border-radius: 16px;
             padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .balance-card .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .balance-card .amount {
@@ -360,15 +225,7 @@
             color: var(--gold-primary);
         }
 
-        .balance-card .amount .currency {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-right: 2px;
-        }
-
-        /* ============================================================
-           3D COIN - PROFESSIONAL
-           ============================================================ */
+        /* ===== COIN ===== */
         .coin-wrapper {
             display: flex;
             justify-content: center;
@@ -377,8 +234,8 @@
 
         .coin-container {
             perspective: 900px;
-            width: 130px;
-            height: 130px;
+            width: 120px;
+            height: 120px;
         }
 
         .coin-3d {
@@ -398,9 +255,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
-            letter-spacing: 1px;
             border: 3px solid;
         }
 
@@ -408,7 +264,6 @@
             background: radial-gradient(ellipse at 35% 25%, #fcd34d, #d97706);
             color: #451a03;
             border-color: #fbbf24;
-            box-shadow: inset 0 -20px 40px rgba(0,0,0,0.2), 0 0 40px rgba(251, 191, 36, 0.1);
         }
 
         .coin-face.silver {
@@ -416,12 +271,9 @@
             color: #1f2937;
             border-color: #d1d5db;
             transform: rotateY(180deg);
-            box-shadow: inset 0 -20px 40px rgba(0,0,0,0.1);
         }
 
-        /* ============================================================
-           SELECTION GRID
-           ============================================================ */
+        /* ===== SELECTION ===== */
         .selection-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -432,32 +284,27 @@
         .select-btn {
             padding: 14px;
             border: 2px solid var(--border-color);
-            border-radius: var(--radius-card);
+            border-radius: 16px;
             background: rgba(0,0,0,0.2);
             color: var(--text-secondary);
             font-weight: 700;
-            font-size: 14px;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
         }
 
         .select-btn.gold.active {
             background: rgba(251, 191, 36, 0.1);
             border-color: var(--gold-primary);
             color: var(--gold-primary);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.05);
         }
 
         .select-btn.silver.active {
             background: rgba(255,255,255,0.05);
-            border-color: var(--silver-primary);
-            color: var(--silver-primary);
-            box-shadow: 0 0 30px rgba(255,255,255,0.03);
+            border-color: #e5e7eb;
+            color: #e5e7eb;
         }
 
-        /* ============================================================
-           STATUS BOX
-           ============================================================ */
+        /* ===== STATUS ===== */
         .status-box {
             text-align: center;
             font-size: 14px;
@@ -473,17 +320,13 @@
         .status-box.lose { color: var(--danger); }
         .status-box.waiting { color: var(--warning); }
 
-        /* ============================================================
-           BOTTOM NAV - PROFESSIONAL
-           ============================================================ */
+        /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             display: flex;
             background: rgba(0,0,0,0.4);
             border-top: 1px solid var(--border-color);
             margin-top: auto;
             backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 2;
         }
 
         .nav-item {
@@ -495,10 +338,8 @@
             font-size: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
             text-align: center;
-            letter-spacing: 0.3px;
-            position: relative;
         }
 
         .nav-item .nav-icon {
@@ -522,13 +363,11 @@
             border-radius: 0 0 4px 4px;
         }
 
-        /* ============================================================
-           PROFILE TAB
-           ============================================================ */
+        /* ===== PROFILE ===== */
         .profile-card {
             background: rgba(0,0,0,0.2);
-            border-radius: var(--radius-card);
-            padding: 20px;
+            border-radius: 16px;
+            padding: 16px;
             border: 1px solid var(--border-color);
             margin-bottom: 16px;
         }
@@ -555,36 +394,7 @@
 
         .profile-row .p-value.gold { color: var(--gold-primary); }
 
-        .kyc-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .kyc-badge.verified { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-        .kyc-badge.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
-        .kyc-badge.rejected { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
-
-        /* ============================================================
-           SECTION TITLES
-           ============================================================ */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .section-subtitle {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        /* ============================================================
-           TOAST
-           ============================================================ */
+        /* ===== TOAST ===== */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -626,28 +436,6 @@
             to { opacity: 0; transform: translateY(-20px) scale(0.95); }
         }
 
-        /* ============================================================
-           SCROLLBAR
-           ============================================================ */
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 4px; }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 420px) {
-            .app-wrapper { border-radius: 16px; min-height: 620px; }
-            .view-section { padding: 16px; }
-            .coin-container { width: 100px; height: 100px; }
-            .coin-face { font-size: 16px; border-width: 2px; }
-            .balance-card .amount { font-size: 20px; }
-            .auth-brand h1 { font-size: 24px; }
-        }
-
-        /* ============================================================
-           SHARE BUTTON ANIMATION
-           ============================================================ */
         .share-btn {
             display: inline-flex;
             align-items: center;
@@ -660,24 +448,12 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
         }
 
-        .share-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
+        .share-btn:active { transform: scale(0.95); }
 
-        .share-btn .icon { font-size: 18px; }
-
-        /* Share Card */
-        .share-card {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(251, 191, 36, 0.01));
-            border: 1px solid rgba(251, 191, 36, 0.08);
-            border-radius: var(--radius-card);
-            padding: 16px;
-            text-align: center;
-            margin: 12px 0;
-        }
-
-        .share-card .ref-code {
+        .ref-code {
             font-size: 24px;
             font-weight: 800;
             color: var(--gold-primary);
@@ -693,21 +469,21 @@
 </head>
 <body>
 
-<!-- ===== TOAST CONTAINER ===== -->
+<!-- ===== TOAST ===== -->
 <div id="toastContainer" class="toast-container"></div>
 
-<!-- ===== APP WRAPPER ===== -->
-<div class="app-wrapper" id="appWrapper">
+<!-- ===== APP ===== -->
+<div class="app-wrapper">
 
-    <!-- ============================================================
-    AUTH VIEW
-    ============================================================ -->
+    <!-- ========== AUTH VIEW ========== -->
     <div id="authView" class="view-section active">
         <div class="auth-container">
             <div class="auth-brand">
-                <span class="logo-icon">⚜️</span>
-                <h1>GoldSilver</h1>
-                <div class="tagline">Premium Gaming Platform</div>
+                <h1>🔒 GoldSilver</h1>
+                <div class="tagline">Secure Gaming Platform</div>
+                <div style="margin-top: 6px;">
+                    <span class="secure-badge">🛡️ End-to-End Encrypted</span>
+                </div>
             </div>
 
             <div class="auth-tabs">
@@ -716,56 +492,45 @@
             </div>
 
             <div class="input-group">
-                <span class="input-icon">👤</span>
-                <input type="text" id="usernameInput" class="custom-input" placeholder="Username" autocomplete="username">
+                <span class="input-icon">📧</span>
+                <input type="email" id="emailInput" class="custom-input" placeholder="Email" autocomplete="email">
             </div>
 
             <div class="input-group">
                 <span class="input-icon">🔑</span>
-                <input type="password" id="passwordInput" class="custom-input" placeholder="Password" autocomplete="current-password">
+                <input type="password" id="passwordInput" class="custom-input" placeholder="Password (min 6 chars)" autocomplete="current-password">
             </div>
 
-            <div class="input-group" id="referralGroup" style="display:none;">
-                <span class="input-icon">🎁</span>
-                <input type="text" id="referralInput" class="custom-input" placeholder="Referral Code (Optional)">
+            <div class="input-group" id="nameGroup" style="display:none;">
+                <span class="input-icon">👤</span>
+                <input type="text" id="nameInput" class="custom-input" placeholder="Full Name">
             </div>
 
             <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">🚀 Login</button>
 
-            <div class="auth-footer">
-                By continuing, you agree to our Terms &amp; Privacy Policy
+            <div style="text-align:center; margin-top:16px; font-size:11px; color:var(--text-muted);">
+                🔒 All data encrypted in transit &amp; at rest
             </div>
         </div>
     </div>
 
-    <!-- ============================================================
-    MAIN VIEW
-    ============================================================ -->
+    <!-- ========== MAIN VIEW ========== -->
     <div id="mainView" style="display:none; flex-direction:column; flex:1;">
 
         <!-- HEADER -->
-        <div class="app-header">
-            <div class="header-top">
-                <div class="header-user">
-                    <div class="avatar" id="userAvatar">👤</div>
-                    <div class="user-info">
-                        <div class="name" id="userTitle">Player</div>
-                        <div class="status">● Live</div>
-                    </div>
+        <div style="padding:16px 20px; background:rgba(0,0,0,0.2); border-bottom:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:700; font-size:14px;">👋 Hi, <span id="userTitle">Player</span></div>
+                    <div style="font-size:10px; color:var(--success);">● Secure Session</div>
                 </div>
-                <div class="header-actions">
-                    <button class="header-btn" onclick="shareApp()" title="Share App">📤</button>
-                    <button class="header-btn" onclick="switchTab('profile')" title="Profile">⚙️</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="share-btn" onclick="shareApp()" style="padding:8px 12px; font-size:12px;">📤 Share</button>
                 </div>
             </div>
-
             <div class="balance-card">
-                <div>
-                    <div class="label">💰 Wallet Balance</div>
-                </div>
-                <div class="amount">
-                    <span class="currency">₹</span><span id="userBalance">0.00</span>
-                </div>
+                <span style="font-size:11px; color:var(--text-secondary);">💰 Wallet</span>
+                <span class="amount">₹<span id="userBalance">0.00</span></span>
             </div>
         </div>
 
@@ -794,108 +559,38 @@
             <div class="status-box" id="resultMsg">💡 Place your bet &amp; spin!</div>
         </div>
 
-        <!-- ===== DEPOSIT TAB ===== -->
-        <div id="depositTab" class="view-section">
-            <div class="section-title">💰 Deposit Funds</div>
-            <div class="section-subtitle">Pay via UPI: <b id="merchantUpiId">loading...</b></div>
-
-            <div class="input-group">
-                <span class="input-icon">💵</span>
-                <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)" min="10">
-            </div>
-
-            <div class="input-group">
-                <span class="input-icon">📋</span>
-                <input type="text" id="depUtr" class="custom-input" placeholder="12-Digit UTR / Reference No." maxlength="12">
-            </div>
-
-            <button class="primary-btn success" onclick="requestDeposit()">📤 Submit Deposit</button>
-            <div style="text-align:center; margin-top:10px; font-size:11px; color:var(--text-muted);">
-                ⏳ Admin approval: 12-24 hours
-            </div>
-        </div>
-
-        <!-- ===== WITHDRAW TAB ===== -->
-        <div id="withdrawTab" class="view-section">
-            <div class="section-title">💸 Withdraw Funds</div>
-            <div class="section-subtitle">Minimum: <b>₹100</b> &bull; Max: <b>₹50,000</b></div>
-
-            <div class="input-group">
-                <span class="input-icon">💵</span>
-                <input type="number" id="witAmount" class="custom-input" placeholder="Amount (₹)" min="100">
-            </div>
-
-            <div class="input-group">
-                <span class="input-icon">📱</span>
-                <input type="text" id="witUpi" class="custom-input" placeholder="Your UPI ID (e.g., name@upi)">
-            </div>
-
-            <button class="primary-btn danger" onclick="requestWithdraw()">📤 Request Withdrawal</button>
-            <div style="text-align:center; margin-top:10px; font-size:11px; color:var(--text-muted);">
-                ⏳ Processing: 12-24 hours
-            </div>
-        </div>
-
         <!-- ===== PROFILE TAB ===== -->
         <div id="profileTab" class="view-section">
-            <div class="section-title">👤 My Profile</div>
-            <div class="section-subtitle">Account details &amp; settings</div>
-
+            <h3 style="margin-bottom:12px;">👤 Profile</h3>
             <div class="profile-card">
                 <div class="profile-row">
-                    <span class="p-label">Username</span>
-                    <span class="p-value gold" id="profileUsername">-</span>
+                    <span class="p-label">Name</span>
+                    <span class="p-value" id="profileName">-</span>
                 </div>
                 <div class="profile-row">
-                    <span class="p-label">Member Since</span>
-                    <span class="p-value" id="profileSince">-</span>
+                    <span class="p-label">Email</span>
+                    <span class="p-value" id="profileEmail">-</span>
                 </div>
                 <div class="profile-row">
-                    <span class="p-label">KYC Status</span>
-                    <span class="p-value"><span class="kyc-badge pending" id="profileKyc">Pending</span></span>
+                    <span class="p-label">User ID</span>
+                    <span class="p-value gold" id="profileUid">-</span>
                 </div>
                 <div class="profile-row">
-                    <span class="p-label">Total Bets</span>
-                    <span class="p-value" id="profileBets">0</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">Total Won</span>
-                    <span class="p-value gold" id="profileWon">₹0</span>
+                    <span class="p-label">Auth Method</span>
+                    <span class="p-value" style="color:var(--success);">🔐 Firebase Auth</span>
                 </div>
             </div>
 
-            <!-- SHARE / REFERRAL CARD -->
-            <div class="share-card">
-                <div style="font-size:13px; color:var(--text-secondary);">🎁 Your Referral Code</div>
-                <div class="ref-code" id="referralCodeDisplay">------</div>
-                <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">
-                    Share this code &amp; earn ₹20 per signup!
-                </div>
-                <button class="share-btn" onclick="shareApp()">
-                    <span class="icon">📤</span> Share &amp; Earn
-                </button>
-            </div>
-
-            <button class="primary-btn danger" onclick="logoutUser()" style="margin-top:8px;">🚪 Logout</button>
+            <button class="primary-btn danger" onclick="logoutUser()">🚪 Logout</button>
         </div>
 
         <!-- ===== BOTTOM NAV ===== -->
         <div class="bottom-nav">
             <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">
-                <span class="nav-icon">🎮</span>
-                Play
-            </button>
-            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">
-                <span class="nav-icon">💰</span>
-                Deposit
-            </button>
-            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">
-                <span class="nav-icon">💸</span>
-                Withdraw
+                <span class="nav-icon">🎮</span> Play
             </button>
             <button class="nav-item" id="btnProfileTab" onclick="switchTab('profile')">
-                <span class="nav-icon">👤</span>
-                Profile
+                <span class="nav-icon">👤</span> Profile
             </button>
         </div>
     </div>
@@ -916,21 +611,19 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const auth = firebase.auth();
+const db = firebase.firestore();
+const rtdb = firebase.database();
 
 // ============================================================
 // 🧠 STATE
 // ============================================================
 const state = {
-    currentUser: '',
+    currentUser: null,
     balance: 0,
     selectedChoice: 'Gold',
     isSpinning: false,
     authMode: 'login',
-    referralCode: '',
-    createdAt: '',
-    totalBets: 0,
-    totalWon: 0,
     balanceListener: null,
 };
 
@@ -947,199 +640,121 @@ function showToast(message, type = 'info') {
 }
 
 // ============================================================
-// 🔐 AUTH
+// 🔐 AUTH - Using Firebase Authentication (SECURE)
 // ============================================================
 function toggleAuth(mode) {
     state.authMode = mode;
     document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
     document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-    document.getElementById('referralGroup').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('nameGroup').style.display = mode === 'signup' ? 'block' : 'none';
     document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '🚀 Login' : '✨ Create Account';
 }
 
 function handleAuth() {
-    const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+    const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
-    const referral = document.getElementById('referralInput').value.trim();
 
-    if (!username || username.length < 3) {
-        showToast('Username must be at least 3 characters', 'error');
+    if (!email || !email.includes('@')) {
+        showToast('Please enter a valid email', 'error');
         return;
     }
-    if (!password || password.length < 4) {
-        showToast('Password must be at least 4 characters', 'error');
+    if (!password || password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
         return;
     }
-
-    const userRef = db.ref('users/' + username);
 
     if (state.authMode === 'signup') {
-        userRef.once('value').then(snap => {
-            if (snap.exists()) {
-                showToast('Username already taken!', 'error');
-                return;
-            }
-
-            const refCode = username + Math.floor(1000 + Math.random() * 9000);
-            const payload = {
-                password: password,
-                balance: 50,
-                myReferralCode: refCode,
-                createdAt: Date.now(),
-                lastActive: Date.now(),
-                isBanned: false,
-                role: 'user',
-                totalBets: 0,
-                totalWon: 0,
-                kycStatus: 'pending'
-            };
-
-            return userRef.set(payload).then(() => {
-                showToast('✅ Account created! Welcome bonus ₹50 added!', 'success');
-                if (referral.length > 0) processReferral(referral, username);
-                enterApp(username);
-            });
-        }).catch(err => showToast('Error: ' + err.message, 'error'));
-    } else {
-        userRef.once('value').then(snap => {
-            if (!snap.exists()) {
-                showToast('User not found! Please sign up first.', 'error');
-                return;
-            }
-            const data = snap.val();
-            if (data.isBanned) {
-                showToast('⛔ Your account has been banned.', 'error');
-                return;
-            }
-            if (data.password === password) {
-                showToast('✅ Welcome back, ' + username + '!', 'success');
-                enterApp(username);
-            } else {
-                showToast('❌ Incorrect password!', 'error');
-            }
-        }).catch(err => showToast('Error: ' + err.message, 'error'));
-    }
-}
-
-// ============================================================
-// 🔗 REFERRAL
-// ============================================================
-function processReferral(code, newUser) {
-    db.ref('users').once('value').then(snap => {
-        let found = false;
-        snap.forEach(child => {
-            const data = child.val();
-            if (data.myReferralCode === code) {
-                found = true;
-                const referrer = child.key;
-                const currentBal = data.balance || 0;
-                db.ref('users/' + referrer).update({ balance: currentBal + 20 });
-                db.ref('referralLogs').push({
-                    referrer: referrer,
-                    referee: newUser,
-                    bonusCredited: 20,
-                    timestamp: Date.now()
+        const name = document.getElementById('nameInput').value.trim() || 'User';
+        // SIGN UP - Firebase Auth
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
+                showToast('✅ Account created successfully!', 'success');
+                
+                // Save user data to Firestore
+                return db.collection('users').doc(user.uid).set({
+                    name: name,
+                    email: email,
+                    balance: 50,
+                    createdAt: Date.now(),
+                    role: 'user',
+                    totalBets: 0,
+                    totalWon: 0
+                }).then(() => {
+                    enterApp(user);
                 });
-                showToast('🎁 Referral bonus ₹20 credited to ' + referrer, 'success');
-            }
-        });
-        if (!found) showToast('Referral code not found, but welcome!', 'warning');
-    });
+            })
+            .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+            });
+    } else {
+        // LOGIN - Firebase Auth
+        auth.signInWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                showToast('✅ Welcome back!', 'success');
+                enterApp(userCredential.user);
+            })
+            .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+            });
+    }
 }
 
 // ============================================================
 // 🚀 ENTER APP
 // ============================================================
-function enterApp(username) {
-    state.currentUser = username;
+function enterApp(user) {
+    state.currentUser = user;
     document.getElementById('authView').classList.remove('active');
     document.getElementById('mainView').style.display = 'flex';
-    document.getElementById('userTitle').textContent = username.toUpperCase();
-    document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
-    document.getElementById('profileUsername').textContent = username;
+    document.getElementById('userTitle').textContent = user.displayName || user.email?.split('@')[0] || 'Player';
+    document.getElementById('profileName').textContent = user.displayName || 'User';
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('profileUid').textContent = user.uid.substring(0, 12) + '...';
 
-    // Load user data
-    const userRef = db.ref('users/' + username);
-    userRef.once('value').then(snap => {
-        const data = snap.val();
-        if (data) {
-            state.referralCode = data.myReferralCode || '------';
-            state.createdAt = data.createdAt || Date.now();
-            state.totalBets = data.totalBets || 0;
-            state.totalWon = data.totalWon || 0;
-            document.getElementById('referralCodeDisplay').textContent = state.referralCode;
-            document.getElementById('profileSince').textContent = new Date(state.createdAt).toLocaleDateString('en-IN');
-            document.getElementById('profileBets').textContent = state.totalBets;
-            document.getElementById('profileWon').textContent = '₹' + state.totalWon.toFixed(2);
-            const kycStatus = data.kycStatus || 'pending';
-            const kycEl = document.getElementById('profileKyc');
-            kycEl.textContent = kycStatus.charAt(0).toUpperCase() + kycStatus.slice(1);
-            kycEl.className = 'kyc-badge ' + kycStatus;
-        }
-    });
-
-    // Listen to balance
+    // Listen to balance from Firestore
     if (state.balanceListener) state.balanceListener();
-    state.balanceListener = db.ref('users/' + username + '/balance').on('value', snap => {
-        state.balance = snap.val() || 0;
-        document.getElementById('userBalance').textContent = state.balance.toFixed(2);
-    });
-
-    // Listen to merchant UPI
-    db.ref('system/config/merchantUpi').on('value', snap => {
-        document.getElementById('merchantUpiId').textContent = snap.val() || 'pay.silvergold@ybl';
-    });
+    state.balanceListener = db.collection('users').doc(user.uid)
+        .onSnapshot(snapshot => {
+            if (snapshot.exists) {
+                const data = snapshot.data();
+                state.balance = data.balance || 0;
+                document.getElementById('userBalance').textContent = state.balance.toFixed(2);
+            }
+        });
 }
 
 // ============================================================
-// 📤 SHARE APP - Native Share API
+// 📤 SHARE
 // ============================================================
 function shareApp() {
-    const text = `⚜️ Join GoldSilver Premium!\n\n🎁 Use my referral code: ${state.referralCode}\n💰 Get ₹50 welcome bonus!\n📱 Play & Win Real Rewards!\n\nDownload now: [Your App Link]`;
+    const text = `🔒 GoldSilver Secure Gaming\n\nPlay & Win Real Rewards!\nDownload now: [Your App Link]`;
     
     if (navigator.share) {
         navigator.share({
-            title: 'GoldSilver - Premium Gaming',
+            title: 'GoldSilver - Secure Gaming',
             text: text,
             url: window.location.href,
-        }).then(() => {
-            showToast('✅ Shared successfully!', 'success');
-        }).catch(() => {
-            // User cancelled
-        });
+        }).catch(() => {});
     } else {
-        // Fallback: Copy to clipboard
         navigator.clipboard.writeText(text).then(() => {
-            showToast('📋 Referral code copied to clipboard!', 'success');
-        }).catch(() => {
-            // Manual copy fallback
-            const tempInput = document.createElement('input');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
             showToast('📋 Copied to clipboard!', 'success');
         });
     }
-
-    // Haptic feedback
-    if (navigator.vibrate) navigator.vibrate(10);
 }
 
 // ============================================================
-// 🎮 GAME LOGIC
+// 🎮 GAME
 // ============================================================
 function selectChoice(choice) {
     if (state.isSpinning) return;
     state.selectedChoice = choice;
     document.getElementById('chooseGold').classList.toggle('active', choice === 'Gold');
     document.getElementById('chooseSilver').classList.toggle('active', choice === 'Silver');
-    if (navigator.vibrate) navigator.vibrate(5);
 }
 
 function switchTab(tab) {
-    ['game', 'deposit', 'withdraw', 'profile'].forEach(t => {
+    ['game', 'profile'].forEach(t => {
         document.getElementById(t + 'Tab').classList.toggle('active', t === tab);
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab').classList.toggle('active', t === tab);
     });
@@ -1163,61 +778,53 @@ function playGame() {
     document.getElementById('resultMsg').className = 'status-box waiting';
     document.getElementById('resultMsg').textContent = '🔄 Spinning...';
 
-    // Deduct bet
-    db.ref('users/' + state.currentUser + '/balance').set(state.balance - bet);
+    const userRef = db.collection('users').doc(state.currentUser.uid);
 
-    // Log bet
-    const betRef = db.ref('bets').push();
+    // Deduct bet
+    userRef.update({ balance: state.balance - bet });
+
+    // Log bet in RTDB (for real-time admin)
+    const betRef = rtdb.ref('bets').push();
     betRef.set({
-        username: state.currentUser,
+        uid: state.currentUser.uid,
+        email: state.currentUser.email,
         betAmount: bet,
         choice: state.selectedChoice,
         status: 'ACTIVE',
         timestamp: Date.now()
     });
 
-    // Get admin force outcome
-    db.ref('system/forceOutcome').once('value').then(snap => {
+    // Admin force outcome
+    rtdb.ref('system/forceOutcome').once('value').then(snap => {
         let result = snap.val() || 'Auto';
         if (result === 'Auto') {
             result = Math.random() < 0.5 ? 'Gold' : 'Silver';
         }
 
         const coin = document.getElementById('gameCoin');
-        let deg = 0;
-        let spins = 14;
-
+        let deg = 0, spins = 14;
         const interval = setInterval(() => {
             deg += 60;
             coin.style.transform = `rotateY(${deg}deg)`;
-            spins--;
-
-            if (spins <= 0) {
+            if (--spins <= 0) {
                 clearInterval(interval);
-                const finalDeg = result === 'Gold' ? 0 : 180;
-                coin.style.transform = `rotateY(${finalDeg}deg)`;
+                coin.style.transform = result === 'Gold' ? 'rotateY(0deg)' : 'rotateY(180deg)';
 
                 const msg = document.getElementById('resultMsg');
                 if (state.selectedChoice === result) {
                     const winAmount = bet * 1.8;
-                    const newBal = state.balance + winAmount;
-                    db.ref('users/' + state.currentUser + '/balance').set(newBal);
-                    // Update stats
-                    db.ref('users/' + state.currentUser).update({
-                        totalWon: (state.totalWon || 0) + winAmount,
-                        totalBets: (state.totalBets || 0) + 1
+                    userRef.update({ 
+                        balance: state.balance + winAmount,
+                        totalWon: firebase.firestore.FieldValue.increment(winAmount),
+                        totalBets: firebase.firestore.FieldValue.increment(1)
                     });
                     msg.className = 'status-box win';
                     msg.textContent = `🎉 WIN! Result: ${result}. Won ₹${winAmount.toFixed(2)}`;
                     showToast(`🎉 You won ₹${winAmount.toFixed(2)}!`, 'success');
-                    if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
                 } else {
-                    db.ref('users/' + state.currentUser).update({
-                        totalBets: (state.totalBets || 0) + 1
-                    });
+                    userRef.update({ totalBets: firebase.firestore.FieldValue.increment(1) });
                     msg.className = 'status-box lose';
-                    msg.textContent = `❌ LOSE! Result: ${result}. Better luck next time!`;
-                    if (navigator.vibrate) navigator.vibrate(50);
+                    msg.textContent = `❌ LOSE! Result: ${result}`;
                 }
 
                 betRef.update({ status: 'COMPLETED', outcome: result });
@@ -1229,111 +836,41 @@ function playGame() {
 }
 
 // ============================================================
-// 💰 DEPOSIT
-// ============================================================
-function requestDeposit() {
-    const amount = parseFloat(document.getElementById('depAmount').value);
-    const utr = document.getElementById('depUtr').value.trim();
-
-    if (isNaN(amount) || amount < 10) {
-        showToast('Minimum deposit is ₹10', 'error');
-        return;
-    }
-    if (utr.length < 6) {
-        showToast('Please enter a valid UTR number', 'error');
-        return;
-    }
-
-    db.ref('depositRequests').push({
-        username: state.currentUser,
-        amount: amount,
-        utr: utr,
-        status: 'pending',
-        timestamp: Date.now()
-    }).then(() => {
-        showToast('✅ Deposit request submitted! Await admin approval.', 'success');
-        document.getElementById('depAmount').value = '';
-        document.getElementById('depUtr').value = '';
-        if (navigator.vibrate) navigator.vibrate(10);
-    }).catch(err => showToast('Error: ' + err.message, 'error'));
-}
-
-// ============================================================
-// 💸 WITHDRAW
-// ============================================================
-function requestWithdraw() {
-    const amount = parseFloat(document.getElementById('witAmount').value);
-    const upi = document.getElementById('witUpi').value.trim();
-
-    if (isNaN(amount) || amount < 100) {
-        showToast('Minimum withdrawal is ₹100', 'error');
-        return;
-    }
-    if (!upi.includes('@') || upi.length < 5) {
-        showToast('Please enter a valid UPI ID', 'error');
-        return;
-    }
-    if (amount > state.balance) {
-        showToast('Insufficient balance!', 'error');
-        return;
-    }
-
-    db.ref('users/' + state.currentUser + '/balance').set(state.balance - amount).then(() => {
-        return db.ref('withdrawRequests').push({
-            username: state.currentUser,
-            amount: amount,
-            upi: upi,
-            status: 'pending',
-            timestamp: Date.now()
-        });
-    }).then(() => {
-        showToast('✅ Withdrawal request submitted!', 'success');
-        document.getElementById('witAmount').value = '';
-        document.getElementById('witUpi').value = '';
-        if (navigator.vibrate) navigator.vibrate(10);
-    }).catch(err => showToast('Error: ' + err.message, 'error'));
-}
-
-// ============================================================
 // 🚪 LOGOUT
 // ============================================================
 function logoutUser() {
     if (confirm('Are you sure you want to logout?')) {
         if (state.balanceListener) state.balanceListener();
-        document.getElementById('mainView').style.display = 'none';
-        document.getElementById('authView').classList.add('active');
-        document.getElementById('usernameInput').value = '';
-        document.getElementById('passwordInput').value = '';
-        state.currentUser = '';
-        state.balance = 0;
-        showToast('👋 Logged out successfully', 'warning');
+        auth.signOut().then(() => {
+            document.getElementById('mainView').style.display = 'none';
+            document.getElementById('authView').classList.add('active');
+            state.currentUser = null;
+            showToast('👋 Logged out', 'warning');
+        });
     }
 }
+
+// ============================================================
+// 🔐 AUTH STATE LISTENER
+// ============================================================
+auth.onAuthStateChanged(user => {
+    if (user && !state.currentUser) {
+        enterApp(user);
+    }
+});
 
 // ============================================================
 // 🛡️ SECURITY
 // ============================================================
 document.addEventListener('keydown', (e) => {
     if (e.key === 'PrintScreen') {
-        showToast('📸 Screenshots are disabled for security', 'warning');
+        showToast('📸 Screenshots disabled for security', 'warning');
         return false;
-    }
-    if (e.ctrlKey && (e.key === 'p' || e.key === 'P')) {
-        e.preventDefault();
-        showToast('🖨️ Print is disabled', 'warning');
     }
 });
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-// ============================================================
-// 📱 INIT
-// ============================================================
-console.log('⚜️ GoldSilver Professional Edition loaded.');
-console.log('🔥 Firebase connected:', firebase.app().name);
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('usernameInput').focus();
-});
+console.log('🔒 GoldSilver Secure Edition loaded.');
 </script>
 </body>
 </html>
