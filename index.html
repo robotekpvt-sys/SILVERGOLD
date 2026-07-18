@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gold & Silver - Premium Edition</title>
+    <!-- Firebase Standard Web SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <style>
         :root {
             --bg-dark: #070b19;
@@ -19,46 +21,262 @@
             --success: #00e676;
             --danger: #ff4d4d;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; background: radial-gradient(circle at center, #142244 0%, #070b19 100%); }
-        .phone-container { width: 100%; max-width: 390px; background: var(--panel-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; min-height: 580px; }
-        .view-section { display: none; padding: 25px 20px; }
-        .view-section.active { display: block; }
-        
-        /* Auth Screen Custom Style */
-        .auth-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; background: rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; }
-        .auth-tab-btn { flex: 1; padding: 14px; background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 15px; }
-        .auth-tab-btn.active { color: var(--gold); background: rgba(255,255,255,0.03); border-bottom: 2px solid var(--gold); }
 
-        .custom-input { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; color: #fff; text-align: center; font-size: 16px; margin-bottom: 16px; outline: none; }
-        .custom-input:focus { border-color: var(--gold); }
-        .primary-btn { width: 100%; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; background: linear-gradient(135deg, #ffe066, #f5af19); color: #3b2300; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); }
-        .primary-btn:disabled { background: #1c2638; color: var(--text-muted); box-shadow: none; }
-        .game-header { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; background: rgba(0,0,0,0.15); }
-        .balance-badge { background: rgba(255, 215, 0, 0.08); border: 1px dashed rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .balance-amount { font-size: 20px; color: var(--gold); font-weight: 700; }
-        .coin-box { perspective: 1000px; margin: 30px auto; width: 120px; height: 120px; }
-        .coin-element { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
-        .coin-side { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 800; border: 4px solid; }
-        .side-gold { background: linear-gradient(135deg, #ffe680, #cc9900); color: #3b2300; border-color: #ffe680; }
-        .side-silver { background: linear-gradient(135deg, #ffffff, #999999); color: #222; border-color: #ffffff; transform: rotateY(180deg); }
-        .selectors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .select-btn { padding: 14px; font-size: 15px; font-weight: 700; border-radius: 14px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.02); color: var(--text-muted); cursor: pointer; }
-        .select-btn.gold-style.active { background: linear-gradient(135deg, #ffe066, #f5af19); color: #3b2300; border-color: var(--gold); }
-        .select-btn.silver-style.active { background: linear-gradient(135deg, #ffffff, #b0b0b0); color: #222; border-color: #fff; }
-        .status-box { margin-top: 15px; font-size: 15px; font-weight: 600; text-align: center; min-height: 24px; }
-        .text-win { color: var(--success); }
-        .text-lose { color: var(--danger); }
-        .navigation-bar { display: flex; border-top: 1px solid var(--border-color); background: rgba(7, 12, 24, 0.9); margin-top: auto; }
-        .nav-item { flex: 1; padding: 16px; background: none; border: none; color: var(--text-muted); font-weight: 700; font-size: 13px; cursor: pointer; text-align: center; }
-        .nav-item.active { color: var(--gold); background: rgba(255,255,255,0.02); }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 10px; 
+            background: radial-gradient(circle at center, #142244 0%, #070b19 100%); 
+        }
+
+        .phone-container { 
+            width: 100%; 
+            max-width: 410px; 
+            background: var(--panel-bg); 
+            border-radius: 24px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 620px; 
+        }
+
+        .view-section { 
+            display: none; 
+            padding: 25px 20px; 
+            flex: 1;
+        }
+
+        .view-section.active { 
+            display: block; 
+        }
+
+        /* Auth Architecture CSS */
+        .auth-tabs { 
+            display: flex; 
+            border-bottom: 1px solid var(--border-color); 
+            margin-bottom: 25px; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 12px; 
+            overflow: hidden; 
+        }
+
+        .auth-tab-btn { 
+            flex: 1; 
+            padding: 14px; 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 15px; 
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab-btn.active { 
+            color: var(--gold); 
+            background: rgba(255,255,255,0.03); 
+            border-bottom: 2px solid var(--gold); 
+        }
+
+        .custom-input { 
+            width: 100%; 
+            background: var(--input-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 14px; 
+            padding: 14px; 
+            color: #fff; 
+            text-align: center; 
+            font-size: 16px; 
+            margin-bottom: 16px; 
+            outline: none; 
+        }
+
+        .custom-input:focus { 
+            border-color: var(--gold); 
+        }
+
+        .primary-btn { 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 14px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            border: none; 
+            cursor: pointer; 
+            background: linear-gradient(135deg, #ffe066, #f5af19); 
+            color: #3b2300; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); 
+            transition: transform 0.1s ease;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .primary-btn:disabled { 
+            background: #1c2638 !important; 
+            color: var(--text-muted) !important; 
+            box-shadow: none !important; 
+            cursor: not-allowed;
+        }
+
+        .game-header { 
+            padding: 20px; 
+            border-bottom: 1px solid var(--border-color); 
+            text-align: center; 
+            background: rgba(0,0,0,0.15); 
+        }
+
+        .balance-badge { 
+            background: rgba(255, 215, 0, 0.08); 
+            border: 1px dashed rgba(255, 215, 0, 0.3); 
+            border-radius: 12px; 
+            padding: 10px 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 10px; 
+        }
+
+        .balance-amount { 
+            font-size: 20px; 
+            color: var(--gold); 
+            font-weight: 700; 
+        }
+
+        /* 3D Coin Animation Core styling */
+        .coin-box { 
+            perspective: 1000px; 
+            margin: 35px auto; 
+            width: 130px; 
+            height: 130px; 
+        }
+
+        .coin-element { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            transform-style: preserve-3d; 
+            transition: transform 0.1s linear; 
+        }
+
+        .coin-side { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            backface-visibility: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 22px; 
+            font-weight: 800; 
+            border: 4px solid; 
+        }
+
+        .side-gold { 
+            background: linear-gradient(135deg, #ffe680, #cc9900); 
+            color: #3b2300; 
+            border-color: #ffe680; 
+        }
+
+        .side-silver { 
+            background: linear-gradient(135deg, #ffffff, #999999); 
+            color: #222; 
+            border-color: #ffffff; 
+            transform: rotateY(180deg); 
+        }
+
+        .selectors-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+
+        .select-btn { 
+            padding: 14px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            background: rgba(255,255,255,0.02); 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+        }
+
+        .select-btn.gold-style.active { 
+            background: linear-gradient(135deg, #ffe066, #f5af19); 
+            color: #3b2300; 
+            border-color: var(--gold); 
+        }
+
+        .select-btn.silver-style.active { 
+            background: linear-gradient(135deg, #ffffff, #b0b0b0); 
+            color: #222; 
+            border-color: #fff; 
+        }
+
+        .status-box { 
+            margin-top: 15px; 
+            font-size: 15px; 
+            font-weight: 600; 
+            text-align: center; 
+            min-height: 24px; 
+        }
+
+        .text-win { color: var(--success); text-shadow: 0 0 8px rgba(0,230,118,0.3); }
+        .text-lose { color: var(--danger); text-shadow: 0 0 8px rgba(255,77,77,0.3); }
+
+        .navigation-bar { 
+            display: flex; 
+            border-top: 1px solid var(--border-color); 
+            background: rgba(7, 12, 24, 0.95); 
+            margin-top: auto; 
+        }
+
+        .nav-item { 
+            flex: 1; 
+            padding: 16px; 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            text-align: center; 
+        }
+
+        .nav-item.active { 
+            color: var(--gold); 
+            background: rgba(255,255,255,0.02); 
+        }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
+    <!-- View 1: Auth Module -->
     <div id="authView" class="view-section active">
-        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold); font-weight: 800;">SILVERGOLD</h2>
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold); font-weight: 800; letter-spacing: 1px;">SILVERGOLD</h2>
         
         <div class="auth-tabs">
             <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuthMode('login')">LOGIN</button>
@@ -68,9 +286,13 @@
         <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
         <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
         
+        <!-- Referral Code Input Architecture Integration -->
+        <input type="text" id="referralInput" class="custom-input" placeholder="Referral Code (Optional)" style="display: none;">
+        
         <button class="primary-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Log In</button>
     </div>
 
+    <!-- View 2: Main Operational System -->
     <div id="mainView" style="display: none; flex-direction: column; height: 100%; flex: 1;">
         <div class="game-header">
             <h3 id="userTitle">PLAYER</h3>
@@ -80,6 +302,7 @@
             </div>
         </div>
 
+        <!-- Tab A: The Game Core -->
         <div id="gameTab" class="view-section active">
             <div class="coin-box">
                 <div class="coin-element" id="gameCoin">
@@ -96,22 +319,25 @@
             <div class="status-box" id="resultMsg">Enter bet and Spin!</div>
         </div>
 
+        <!-- Tab B: Manual Deposit Pipeline -->
         <div id="depositTab" class="view-section">
             <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">DEPOSIT MONEY</h3>
-            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff;">yourupi@ybl</b></p>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff; user-select: text;" id="merchantUpiId">loading_merchant_upi...</b></p>
             <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)">
             <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Ref No.">
             <button class="primary-btn" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
+        <!-- Tab C: Manual Withdrawal Pipeline -->
         <div id="withdrawTab" class="view-section">
             <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">WITHDRAW MONEY</h3>
             <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">*न्यूनतम निकासी राशि ₹100 है।</p>
             <input type="number" id="witAmount" class="custom-input" placeholder="Amount to Withdraw (₹)">
             <input type="text" id="witUpi" class="custom-input" placeholder="Enter Your UPI ID">
-            <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff;" onclick="requestWithdraw()">Request Withdrawal</button>
+            <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);" onclick="requestWithdraw()">Request Withdrawal</button>
         </div>
 
+        <!-- Global Navigation -->
         <div class="navigation-bar">
             <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
             <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">💰 Deposit</button>
@@ -121,7 +347,7 @@
 </div>
 
 <script>
-    // Config Connection
+    // System Initialization & Configurations
     const firebaseConfig = {
         apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
         authDomain: "silvergold-dbe2f.firebaseapp.com",
@@ -131,6 +357,7 @@
         messagingSenderId: "14714045042",
         appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
     };
+    
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
@@ -138,7 +365,15 @@
     let userBalance = 0;
     let selectedChoice = "Gold";
     let isSpinning = false;
-    let authMode = "login"; // Default Mode
+    let authMode = "login";
+
+    // Live listening to Admin Merchant Controls from Database
+    function listenToSystemConfig() {
+        database.ref('system/config/merchantUpi').on('value', snapshot => {
+            const upi = snapshot.val() || "pay.silvergold@ybl";
+            document.getElementById('merchantUpiId').innerText = upi;
+        });
+    }
 
     function toggleAuthMode(mode) {
         authMode = mode;
@@ -148,15 +383,18 @@
         if (mode === 'login') {
             document.getElementById('tabLogin').classList.add('active');
             document.getElementById('authSubmitBtn').innerText = "Log In";
+            document.getElementById('referralInput').style.display = 'none';
         } else {
             document.getElementById('tabSignup').classList.add('active');
             document.getElementById('authSubmitBtn').innerText = "Sign Up (Register)";
+            document.getElementById('referralInput').style.display = 'block';
         }
     }
 
     function handleAuthSubmit() {
         const username = document.getElementById('usernameInput').value.trim().toLowerCase();
         const password = document.getElementById('passwordInput').value.trim();
+        const refCode = document.getElementById('referralInput').value.trim();
 
         if (!username || username.length < 3 || !password || password.length < 4) {
             alert("कृपया सही यूजरनेम (min 3 अक्षर) और पासवर्ड (min 4 अक्षर) डालें!");
@@ -165,21 +403,32 @@
 
         database.ref('users/' + username).once('value', snapshot => {
             if (authMode === 'signup') {
-                // Sign Up Logic
                 if (snapshot.exists()) {
-                    alert("यह यूजरनेम पहले से मौजूद है! कृपया दूसरा चुनें या लॉगिन करें।");
+                    alert("यह यूजरनेम पहले से मौजूद है! कृपया दूसरा चुनें।");
                 } else {
-                    database.ref('users/' + username).set({
+                    const cleanRefCode = username + Math.floor(1000 + Math.random() * 9000);
+                    
+                    // Secure registration atomic execution pipeline
+                    const registrationPayload = {
                         password: password,
-                        balance: 50 // नया अकाउंट बनाने पर ₹50 वेलकम बोनस
-                    }).then(() => {
+                        balance: 50,
+                        myReferralCode: cleanRefCode,
+                        timestamp: Date.now()
+                    };
+
+                    database.ref('users/' + username).set(registrationPayload).then(() => {
                         currentUser = username;
-                        alert("अकाउंट सफलतापूर्वक बन गया! ₹50 बोनस ऐड कर दिया गया है।");
+                        alert(`अकाउंट बन गया! वेलकम बोनस ₹50 मिल गया है।`);
+                        
+                        // Referral Validation and Trigger Process
+                        if (refCode.length > 0) {
+                            processReferralTracking(refCode, username);
+                        }
+                        
                         enterApp();
                     });
                 }
             } else {
-                // Login Logic
                 if (!snapshot.exists()) {
                     alert("यह यूजरनेम मौजूद नहीं है! पहले SIGN UP करें।");
                 } else {
@@ -194,7 +443,34 @@
         });
     }
 
+    function processReferralTracking(code, secondaryUser) {
+        database.ref('users').once('value', snapshot => {
+            let codeFound = false;
+            snapshot.forEach(child => {
+                if (child.val().myReferralCode === code) {
+                    codeFound = true;
+                    const primaryUser = child.key;
+                    const currentBal = child.val().balance || 0;
+                    
+                    // Credit 20 Coins configuration to Referrer
+                    database.ref('users/' + primaryUser).update({
+                        balance: currentBal + 20
+                    });
+
+                    // Log in system ledger for audit trail
+                    database.ref('referralLogs').push().set({
+                        referrer: primaryUser,
+                        referee: secondaryUser,
+                        bonusCredited: 20,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+        });
+    }
+
     function enterApp() {
+        listenToSystemConfig();
         database.ref('users/' + currentUser).on('value', snap => {
             if(snap.exists()) {
                 userBalance = snap.val().balance;
@@ -223,53 +499,107 @@
         document.getElementById('btnDepositTab').classList.remove('active');
         document.getElementById('btnWithdrawTab').classList.remove('active');
 
-        if (tab === 'game') { document.getElementById('gameTab').classList.add('active'); document.getElementById('btnGameTab').classList.add('active'); }
-        else if (tab === 'deposit') { document.getElementById('depositTab').classList.add('active'); document.getElementById('btnDepositTab').classList.add('active'); }
-        else { document.getElementById('withdrawTab').classList.add('active'); document.getElementById('btnWithdrawTab').classList.add('active'); }
+        if (tab === 'game') { 
+            document.getElementById('gameTab').classList.add('active'); 
+            document.getElementById('btnGameTab').classList.add('active'); 
+        } else if (tab === 'deposit') { 
+            document.getElementById('depositTab').classList.add('active'); 
+            document.getElementById('btnDepositTab').classList.add('active'); 
+        } else { 
+            document.getElementById('withdrawTab').classList.add('active'); 
+            document.getElementById('btnWithdrawTab').classList.add('active'); 
+        }
     }
 
     function requestDeposit() {
         const amt = parseFloat(document.getElementById('depAmount').value);
         const utr = document.getElementById('depUtr').value.trim();
-        if (isNaN(amt) || amt < 10 || utr.length < 6) { alert("Enter valid details!"); return; }
-        database.ref('depositRequests').push().set({ username: currentUser, amount: amt, utr: utr, status: 'pending', timestamp: Date.now() })
-        .then(() => { alert("Deposit request sent!"); document.getElementById('depAmount').value = ''; document.getElementById('depUtr').value = ''; });
+        if (isNaN(amt) || amt < 10 || utr.length < 6) { 
+            alert("कृपया सही राशि और यूटीआर नंबर डालें!"); 
+            return; 
+        }
+        
+        database.ref('depositRequests').push().set({ 
+            username: currentUser, 
+            amount: amt, 
+            utr: utr, 
+            status: 'pending', 
+            timestamp: Date.now() 
+        })
+        .then(() => { 
+            alert("डिपॉजिट अनुरोध सफलतापूर्वक सबमिट किया गया! एडमिन मंजूरी की प्रतीक्षा करें।"); 
+            document.getElementById('depAmount').value = ''; 
+            document.getElementById('depUtr').value = ''; 
+        });
     }
 
     function requestWithdraw() {
         const amt = parseFloat(document.getElementById('witAmount').value);
         const upi = document.getElementById('witUpi').value.trim();
-        if (isNaN(amt) || amt < 100) { alert("Min withdrawal is ₹100!"); return; }
-        if (upi.length < 5 || !upi.includes('@')) { alert("Enter valid UPI ID!"); return; }
-        if (amt > userBalance) { alert("Insufficient balance!"); return; }
+        if (isNaN(amt) || amt < 100) { alert("न्यूनतम निकासी राशि ₹100 है!"); return; }
+        if (upi.length < 5 || !upi.includes('@')) { alert("वैध यूपीआई आईडी दर्ज करें!"); return; }
+        if (amt > userBalance) { alert("अपर्याप्त वॉलेट बैलेंस!"); return; }
 
+        // Deduct upfront & push to pending withdrawal ledger
         database.ref('users/' + currentUser).update({ balance: userBalance - amt }).then(() => {
-            database.ref('withdrawRequests').push().set({ username: currentUser, amount: amt, upi: upi, status: 'pending', timestamp: Date.now() })
-            .then(() => { alert("Withdraw request submitted!"); document.getElementById('witAmount').value = ''; document.getElementById('witUpi').value = ''; });
+            database.ref('withdrawRequests').push().set({ 
+                username: currentUser, 
+                amount: amt, 
+                upi: upi, 
+                status: 'pending', 
+                timestamp: Date.now() 
+            })
+            .then(() => { 
+                alert("निकासी अनुरोध सबमिट हो गया!"); 
+                document.getElementById('witAmount').value = ''; 
+                document.getElementById('witUpi').value = ''; 
+            });
         });
     }
 
     function playGame() {
         if (isSpinning) return;
         const bet = parseFloat(document.getElementById('betAmount').value);
-        if (isNaN(bet) || bet < 10 || bet > userBalance) { alert("Check your bet amount/balance!"); return; }
+        if (isNaN(bet) || bet < 10 || bet > userBalance) { 
+            alert("बैलेंस या न्यूनतम बेट (₹10) चेक करें!"); 
+            return; 
+        }
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
+        
+        // Log user bet placement transaction
         database.ref('users/' + currentUser).update({ balance: userBalance - bet });
+        
+        const activeBetRef = database.ref('bets').push();
+        activeBetRef.set({
+            username: currentUser,
+            betAmount: bet,
+            choice: selectedChoice,
+            status: "ACTIVE",
+            timestamp: Date.now()
+        });
 
+        // Pull Administrative Force controls in Real-Time
         database.ref('system/forceOutcome').once('value', snapshot => {
             let result = snapshot.val() || 'Auto';
-            if (result === 'Auto') { result = Math.random() < 0.5 ? 'Gold' : 'Silver'; }
+            if (result === 'Auto') { 
+                result = Math.random() < 0.5 ? 'Gold' : 'Silver'; 
+            }
 
             const coin = document.getElementById('gameCoin');
-            let deg = 0, spins = 12;
+            let deg = 0, spins = 15;
+            
             const interval = setInterval(() => {
-                deg += 45; coin.style.transform = `rotateY(${deg}deg)`; spins--;
+                deg += 60; 
+                coin.style.transform = `rotateY(${deg}deg)`; 
+                spins--;
+                
                 if (spins <= 0) {
                     clearInterval(interval);
                     coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
                     const msg = document.getElementById('resultMsg');
+                    
                     if (selectedChoice === result) {
                         const winAmt = bet * 1.8;
                         database.ref('users/' + currentUser).update({ balance: userBalance + winAmt });
@@ -277,7 +607,10 @@
                     } else {
                         msg.innerHTML = `<span class="text-lose">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
                     }
-                    isSpinning = false; document.getElementById('spinBtn').disabled = false;
+                    
+                    activeBetRef.update({ status: "COMPLETED", systemOutcome: result });
+                    isSpinning = false; 
+                    document.getElementById('spinBtn').disabled = false;
                 }
             }, 100);
         });
