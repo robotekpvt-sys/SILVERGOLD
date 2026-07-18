@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔒 GoldSilver Secure</title>
+    <title>🔒 GoldSilver - Complete</title>
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <style>
-        /* ===== PREMIUM SECURE STYLES ===== */
         :root {
             --bg-primary: #0a0e1a;
             --bg-secondary: #111827;
@@ -28,6 +27,7 @@
             --warning: #fbbf24;
             --shadow-premium: 0 8px 32px rgba(0,0,0,0.6);
             --radius-premium: 20px;
+            --radius-card: 16px;
         }
 
         * { 
@@ -57,7 +57,7 @@
             border: 1px solid rgba(255,255,255,0.04);
             box-shadow: var(--shadow-premium);
             overflow: hidden;
-            min-height: 700px;
+            min-height: 720px;
             display: flex;
             flex-direction: column;
         }
@@ -104,7 +104,7 @@
         }
 
         .auth-brand h1 {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
@@ -115,7 +115,7 @@
         .auth-brand .tagline {
             font-size: 12px;
             color: var(--text-secondary);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
@@ -178,6 +178,10 @@
             box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.06);
         }
 
+        .custom-input::placeholder {
+            color: var(--text-muted);
+        }
+
         .primary-btn {
             width: 100%;
             padding: 16px;
@@ -207,7 +211,48 @@
             box-shadow: 0 4px 25px rgba(52, 211, 153, 0.2);
         }
 
-        /* ===== BALANCE CARD ===== */
+        /* ===== HEADER ===== */
+        .app-header {
+            padding: 16px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-user .name {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .header-user .status {
+            font-size: 10px;
+            color: var(--success);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-btn:active { transform: scale(0.95); }
+
         .balance-card {
             background: rgba(251, 191, 36, 0.06);
             border: 1px solid rgba(251, 191, 36, 0.08);
@@ -217,6 +262,13 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 12px;
+        }
+
+        .balance-card .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .balance-card .amount {
@@ -320,6 +372,71 @@
         .status-box.lose { color: var(--danger); }
         .status-box.waiting { color: var(--warning); }
 
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle b {
+            color: var(--text-primary);
+        }
+
+        /* ===== TRANSACTION LIST ===== */
+        .transaction-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        .transaction-item .tx-info .tx-type {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .transaction-item .tx-info .tx-date {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .transaction-item .tx-amount {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .transaction-item .tx-amount.credit { color: var(--success); }
+        .transaction-item .tx-amount.debit { color: var(--danger); }
+
+        .transaction-item .tx-status {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .tx-status.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .tx-status.approved { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+        .tx-status.rejected { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             display: flex;
@@ -331,7 +448,7 @@
 
         .nav-item {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border: none;
             background: transparent;
             color: var(--text-muted);
@@ -340,6 +457,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            position: relative;
         }
 
         .nav-item .nav-icon {
@@ -362,37 +480,6 @@
             background: var(--gold-gradient);
             border-radius: 0 0 4px 4px;
         }
-
-        /* ===== PROFILE ===== */
-        .profile-card {
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-        }
-
-        .profile-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .profile-row:last-child { border-bottom: none; }
-
-        .profile-row .p-label {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .profile-row .p-value {
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .profile-row .p-value.gold { color: var(--gold-primary); }
 
         /* ===== TOAST ===== */
         .toast-container {
@@ -436,35 +523,44 @@
             to { opacity: 0; transform: translateY(-20px) scale(0.95); }
         }
 
-        .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 12px;
+        /* ===== PROFILE ===== */
+        .profile-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 16px;
             border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.03);
+            margin-bottom: 16px;
+        }
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-row:last-child { border-bottom: none; }
+
+        .profile-row .p-label {
             color: var(--text-secondary);
             font-size: 13px;
+        }
+
+        .profile-row .p-value {
+            color: var(--text-primary);
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 13px;
         }
 
-        .share-btn:active { transform: scale(0.95); }
+        .profile-row .p-value.gold { color: var(--gold-primary); }
 
-        .ref-code {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--gold-primary);
-            letter-spacing: 2px;
-            font-family: 'Courier New', monospace;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 16px;
-            border-radius: 10px;
-            display: inline-block;
-            margin: 8px 0;
+        .scrollable {
+            max-height: 350px;
+            overflow-y: auto;
         }
+
+        .scrollable::-webkit-scrollbar { width: 3px; }
+        .scrollable::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -479,8 +575,8 @@
     <div id="authView" class="view-section active">
         <div class="auth-container">
             <div class="auth-brand">
-                <h1>🔒 GoldSilver</h1>
-                <div class="tagline">Secure Gaming Platform</div>
+                <h1>⚜️ GoldSilver</h1>
+                <div class="tagline">Premium Gaming Platform</div>
                 <div style="margin-top: 6px;">
                     <span class="secure-badge">🛡️ End-to-End Encrypted</span>
                 </div>
@@ -493,12 +589,12 @@
 
             <div class="input-group">
                 <span class="input-icon">📧</span>
-                <input type="email" id="emailInput" class="custom-input" placeholder="Email" autocomplete="email">
+                <input type="email" id="emailInput" class="custom-input" placeholder="Email">
             </div>
 
             <div class="input-group">
                 <span class="input-icon">🔑</span>
-                <input type="password" id="passwordInput" class="custom-input" placeholder="Password (min 6 chars)" autocomplete="current-password">
+                <input type="password" id="passwordInput" class="custom-input" placeholder="Password (min 6 chars)">
             </div>
 
             <div class="input-group" id="nameGroup" style="display:none;">
@@ -518,19 +614,23 @@
     <div id="mainView" style="display:none; flex-direction:column; flex:1;">
 
         <!-- HEADER -->
-        <div style="padding:16px 20px; background:rgba(0,0,0,0.2); border-bottom:1px solid var(--border-color);">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <div style="font-weight:700; font-size:14px;">👋 Hi, <span id="userTitle">Player</span></div>
-                    <div style="font-size:10px; color:var(--success);">● Secure Session</div>
+        <div class="app-header">
+            <div class="header-top">
+                <div class="header-user">
+                    <div class="name">👋 Hi, <span id="userTitle">Player</span></div>
+                    <div class="status">● Secure Session</div>
                 </div>
-                <div style="display:flex; gap:8px;">
-                    <button class="share-btn" onclick="shareApp()" style="padding:8px 12px; font-size:12px;">📤 Share</button>
+                <div class="header-actions">
+                    <button class="header-btn" onclick="shareApp()">📤 Share</button>
                 </div>
             </div>
             <div class="balance-card">
-                <span style="font-size:11px; color:var(--text-secondary);">💰 Wallet</span>
-                <span class="amount">₹<span id="userBalance">0.00</span></span>
+                <div>
+                    <div class="label">💰 Wallet Balance</div>
+                </div>
+                <div class="amount">
+                    ₹<span id="userBalance">0.00</span>
+                </div>
             </div>
         </div>
 
@@ -559,9 +659,73 @@
             <div class="status-box" id="resultMsg">💡 Place your bet &amp; spin!</div>
         </div>
 
+        <!-- ===== DEPOSIT TAB ===== -->
+        <div id="depositTab" class="view-section">
+            <div class="section-title">💰 Deposit Funds</div>
+            <div class="section-subtitle">
+                Pay via UPI: <b id="merchantUpiId">loading...</b>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">💵</span>
+                <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)" min="10">
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">📋</span>
+                <input type="text" id="depUtr" class="custom-input" placeholder="12-Digit UTR / Reference No." maxlength="12">
+            </div>
+
+            <button class="primary-btn success" onclick="requestDeposit()">📤 Submit Deposit Request</button>
+
+            <div style="margin-top: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:13px; color:var(--text-secondary);">📋 Recent Deposits</span>
+                </div>
+                <div class="transaction-list" id="depositHistory">
+                    <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">
+                        No deposits yet
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== WITHDRAW TAB ===== -->
+        <div id="withdrawTab" class="view-section">
+            <div class="section-title">💸 Withdraw Funds</div>
+            <div class="section-subtitle">
+                Minimum: <b>₹100</b> &bull; Max: <b>₹50,000</b>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">💵</span>
+                <input type="number" id="witAmount" class="custom-input" placeholder="Amount (₹)" min="100">
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">📱</span>
+                <input type="text" id="witUpi" class="custom-input" placeholder="Your UPI ID (e.g., name@upi)">
+            </div>
+
+            <button class="primary-btn danger" onclick="requestWithdraw()">📤 Request Withdrawal</button>
+
+            <div style="margin-top: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:13px; color:var(--text-secondary);">📋 Recent Withdrawals</span>
+                </div>
+                <div class="transaction-list" id="withdrawHistory">
+                    <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">
+                        No withdrawals yet
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== PROFILE TAB ===== -->
         <div id="profileTab" class="view-section">
-            <h3 style="margin-bottom:12px;">👤 Profile</h3>
+            <div class="section-title">👤 My Profile</div>
+            <div class="section-subtitle">Account details &amp; settings</div>
+
             <div class="profile-card">
                 <div class="profile-row">
                     <span class="p-label">Name</span>
@@ -576,6 +740,14 @@
                     <span class="p-value gold" id="profileUid">-</span>
                 </div>
                 <div class="profile-row">
+                    <span class="p-label">Total Bets</span>
+                    <span class="p-value gold" id="profileBets">0</span>
+                </div>
+                <div class="profile-row">
+                    <span class="p-label">Total Won</span>
+                    <span class="p-value gold" id="profileWon">₹0</span>
+                </div>
+                <div class="profile-row">
                     <span class="p-label">Auth Method</span>
                     <span class="p-value" style="color:var(--success);">🔐 Firebase Auth</span>
                 </div>
@@ -588,6 +760,12 @@
         <div class="bottom-nav">
             <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">
                 <span class="nav-icon">🎮</span> Play
+            </button>
+            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">
+                <span class="nav-icon">💰</span> Deposit
+            </button>
+            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">
+                <span class="nav-icon">💸</span> Withdraw
             </button>
             <button class="nav-item" id="btnProfileTab" onclick="switchTab('profile')">
                 <span class="nav-icon">👤</span> Profile
@@ -625,6 +803,8 @@ const state = {
     isSpinning: false,
     authMode: 'login',
     balanceListener: null,
+    depositsListener: null,
+    withdrawsListener: null,
 };
 
 // ============================================================
@@ -640,7 +820,7 @@ function showToast(message, type = 'info') {
 }
 
 // ============================================================
-// 🔐 AUTH - Using Firebase Authentication (SECURE)
+// 🔐 AUTH
 // ============================================================
 function toggleAuth(mode) {
     state.authMode = mode;
@@ -665,13 +845,10 @@ function handleAuth() {
 
     if (state.authMode === 'signup') {
         const name = document.getElementById('nameInput').value.trim() || 'User';
-        // SIGN UP - Firebase Auth
         auth.createUserWithEmailAndPassword(email, password)
             .then(userCredential => {
                 const user = userCredential.user;
-                showToast('✅ Account created successfully!', 'success');
-                
-                // Save user data to Firestore
+                showToast('✅ Account created! Welcome bonus ₹50!', 'success');
                 return db.collection('users').doc(user.uid).set({
                     name: name,
                     email: email,
@@ -680,23 +857,16 @@ function handleAuth() {
                     role: 'user',
                     totalBets: 0,
                     totalWon: 0
-                }).then(() => {
-                    enterApp(user);
-                });
+                }).then(() => enterApp(user));
             })
-            .catch(error => {
-                showToast('Error: ' + error.message, 'error');
-            });
+            .catch(error => showToast('Error: ' + error.message, 'error'));
     } else {
-        // LOGIN - Firebase Auth
         auth.signInWithEmailAndPassword(email, password)
             .then(userCredential => {
                 showToast('✅ Welcome back!', 'success');
                 enterApp(userCredential.user);
             })
-            .catch(error => {
-                showToast('Error: ' + error.message, 'error');
-            });
+            .catch(error => showToast('Error: ' + error.message, 'error'));
     }
 }
 
@@ -707,12 +877,12 @@ function enterApp(user) {
     state.currentUser = user;
     document.getElementById('authView').classList.remove('active');
     document.getElementById('mainView').style.display = 'flex';
-    document.getElementById('userTitle').textContent = user.displayName || user.email?.split('@')[0] || 'Player';
+    document.getElementById('userTitle').textContent = user.email?.split('@')[0] || 'Player';
     document.getElementById('profileName').textContent = user.displayName || 'User';
     document.getElementById('profileEmail').textContent = user.email;
     document.getElementById('profileUid').textContent = user.uid.substring(0, 12) + '...';
 
-    // Listen to balance from Firestore
+    // Listen to balance
     if (state.balanceListener) state.balanceListener();
     state.balanceListener = db.collection('users').doc(user.uid)
         .onSnapshot(snapshot => {
@@ -720,7 +890,161 @@ function enterApp(user) {
                 const data = snapshot.data();
                 state.balance = data.balance || 0;
                 document.getElementById('userBalance').textContent = state.balance.toFixed(2);
+                document.getElementById('profileBets').textContent = data.totalBets || 0;
+                document.getElementById('profileWon').textContent = '₹' + (data.totalWon || 0).toFixed(2);
             }
+        });
+
+    // Listen to merchant UPI
+    rtdb.ref('system/config/merchantUpi').on('value', snap => {
+        document.getElementById('merchantUpiId').textContent = snap.val() || 'pay.silvergold@ybl';
+    });
+
+    // Listen to deposits
+    listenToDeposits(user.uid);
+    listenToWithdrawals(user.uid);
+}
+
+// ============================================================
+// 💰 DEPOSIT SYSTEM
+// ============================================================
+function requestDeposit() {
+    const amount = parseFloat(document.getElementById('depAmount').value);
+    const utr = document.getElementById('depUtr').value.trim();
+
+    if (isNaN(amount) || amount < 10) {
+        showToast('Minimum deposit is ₹10', 'error');
+        return;
+    }
+    if (utr.length < 6) {
+        showToast('Please enter a valid UTR number', 'error');
+        return;
+    }
+
+    const depositData = {
+        userId: state.currentUser.uid,
+        email: state.currentUser.email,
+        amount: amount,
+        utr: utr,
+        status: 'pending',
+        type: 'DEPOSIT',
+        timestamp: Date.now()
+    };
+
+    db.collection('transactions').add(depositData)
+        .then(() => {
+            showToast('✅ Deposit request submitted! Awaiting admin approval.', 'success');
+            document.getElementById('depAmount').value = '';
+            document.getElementById('depUtr').value = '';
+        })
+        .catch(err => showToast('Error: ' + err.message, 'error'));
+}
+
+function listenToDeposits(uid) {
+    if (state.depositsListener) state.depositsListener();
+    state.depositsListener = db.collection('transactions')
+        .where('userId', '==', uid)
+        .where('type', '==', 'DEPOSIT')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snapshot => {
+            const container = document.getElementById('depositHistory');
+            if (snapshot.empty) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">No deposits yet</div>`;
+                return;
+            }
+            let html = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const date = new Date(data.timestamp).toLocaleDateString('en-IN');
+                const status = data.status || 'pending';
+                html += `
+                    <div class="transaction-item">
+                        <div class="tx-info">
+                            <div class="tx-type">💳 Deposit ₹${data.amount}</div>
+                            <div class="tx-date">${date} • UTR: ${data.utr || 'N/A'}</div>
+                        </div>
+                        <div>
+                            <span class="tx-status ${status}">${status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        });
+}
+
+// ============================================================
+// 💸 WITHDRAW SYSTEM
+// ============================================================
+function requestWithdraw() {
+    const amount = parseFloat(document.getElementById('witAmount').value);
+    const upi = document.getElementById('witUpi').value.trim();
+
+    if (isNaN(amount) || amount < 100) {
+        showToast('Minimum withdrawal is ₹100', 'error');
+        return;
+    }
+    if (!upi.includes('@') || upi.length < 5) {
+        showToast('Please enter a valid UPI ID', 'error');
+        return;
+    }
+    if (amount > state.balance) {
+        showToast('Insufficient balance!', 'error');
+        return;
+    }
+
+    const withdrawData = {
+        userId: state.currentUser.uid,
+        email: state.currentUser.email,
+        amount: amount,
+        upiId: upi,
+        status: 'pending',
+        type: 'WITHDRAW',
+        timestamp: Date.now()
+    };
+
+    // Deduct balance first
+    db.collection('users').doc(state.currentUser.uid).update({
+        balance: state.balance - amount
+    }).then(() => {
+        return db.collection('transactions').add(withdrawData);
+    }).then(() => {
+        showToast('✅ Withdrawal request submitted!', 'success');
+        document.getElementById('witAmount').value = '';
+        document.getElementById('witUpi').value = '';
+    }).catch(err => showToast('Error: ' + err.message, 'error'));
+}
+
+function listenToWithdrawals(uid) {
+    if (state.withdrawsListener) state.withdrawsListener();
+    state.withdrawsListener = db.collection('transactions')
+        .where('userId', '==', uid)
+        .where('type', '==', 'WITHDRAW')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snapshot => {
+            const container = document.getElementById('withdrawHistory');
+            if (snapshot.empty) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">No withdrawals yet</div>`;
+                return;
+            }
+            let html = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const date = new Date(data.timestamp).toLocaleDateString('en-IN');
+                const status = data.status || 'pending';
+                html += `
+                    <div class="transaction-item">
+                        <div class="tx-info">
+                            <div class="tx-type">💸 Withdraw ₹${data.amount}</div>
+                            <div class="tx-date">${date} • UPI: ${data.upiId || 'N/A'}</div>
+                        </div>
+                        <div>
+                            <span class="tx-status ${status}">${status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         });
 }
 
@@ -728,18 +1052,11 @@ function enterApp(user) {
 // 📤 SHARE
 // ============================================================
 function shareApp() {
-    const text = `🔒 GoldSilver Secure Gaming\n\nPlay & Win Real Rewards!\nDownload now: [Your App Link]`;
-    
+    const text = `⚜️ GoldSilver Premium Gaming\n\nPlay & Win Real Rewards!\n💰 Instant Deposits & Withdrawals\n🔒 Secure & Encrypted\n\nDownload now!`;
     if (navigator.share) {
-        navigator.share({
-            title: 'GoldSilver - Secure Gaming',
-            text: text,
-            url: window.location.href,
-        }).catch(() => {});
+        navigator.share({ title: 'GoldSilver', text: text, url: window.location.href }).catch(() => {});
     } else {
-        navigator.clipboard.writeText(text).then(() => {
-            showToast('📋 Copied to clipboard!', 'success');
-        });
+        navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!', 'success'));
     }
 }
 
@@ -754,7 +1071,7 @@ function selectChoice(choice) {
 }
 
 function switchTab(tab) {
-    ['game', 'profile'].forEach(t => {
+    ['game', 'deposit', 'withdraw', 'profile'].forEach(t => {
         document.getElementById(t + 'Tab').classList.toggle('active', t === tab);
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab').classList.toggle('active', t === tab);
     });
@@ -762,7 +1079,6 @@ function switchTab(tab) {
 
 function playGame() {
     if (state.isSpinning) return;
-
     const bet = parseFloat(document.getElementById('betAmount').value);
     if (isNaN(bet) || bet < 10) {
         showToast('Minimum bet is ₹10', 'error');
@@ -779,11 +1095,8 @@ function playGame() {
     document.getElementById('resultMsg').textContent = '🔄 Spinning...';
 
     const userRef = db.collection('users').doc(state.currentUser.uid);
-
-    // Deduct bet
     userRef.update({ balance: state.balance - bet });
 
-    // Log bet in RTDB (for real-time admin)
     const betRef = rtdb.ref('bets').push();
     betRef.set({
         uid: state.currentUser.uid,
@@ -794,12 +1107,9 @@ function playGame() {
         timestamp: Date.now()
     });
 
-    // Admin force outcome
     rtdb.ref('system/forceOutcome').once('value').then(snap => {
         let result = snap.val() || 'Auto';
-        if (result === 'Auto') {
-            result = Math.random() < 0.5 ? 'Gold' : 'Silver';
-        }
+        if (result === 'Auto') result = Math.random() < 0.5 ? 'Gold' : 'Silver';
 
         const coin = document.getElementById('gameCoin');
         let deg = 0, spins = 14;
@@ -813,7 +1123,7 @@ function playGame() {
                 const msg = document.getElementById('resultMsg');
                 if (state.selectedChoice === result) {
                     const winAmount = bet * 1.8;
-                    userRef.update({ 
+                    userRef.update({
                         balance: state.balance + winAmount,
                         totalWon: firebase.firestore.FieldValue.increment(winAmount),
                         totalBets: firebase.firestore.FieldValue.increment(1)
@@ -826,7 +1136,6 @@ function playGame() {
                     msg.className = 'status-box lose';
                     msg.textContent = `❌ LOSE! Result: ${result}`;
                 }
-
                 betRef.update({ status: 'COMPLETED', outcome: result });
                 state.isSpinning = false;
                 document.getElementById('spinBtn').disabled = false;
@@ -841,6 +1150,8 @@ function playGame() {
 function logoutUser() {
     if (confirm('Are you sure you want to logout?')) {
         if (state.balanceListener) state.balanceListener();
+        if (state.depositsListener) state.depositsListener();
+        if (state.withdrawsListener) state.withdrawsListener();
         auth.signOut().then(() => {
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('authView').classList.add('active');
@@ -851,12 +1162,10 @@ function logoutUser() {
 }
 
 // ============================================================
-// 🔐 AUTH STATE LISTENER
+// 🔐 AUTH STATE
 // ============================================================
 auth.onAuthStateChanged(user => {
-    if (user && !state.currentUser) {
-        enterApp(user);
-    }
+    if (user && !state.currentUser) enterApp(user);
 });
 
 // ============================================================
@@ -870,7 +1179,7 @@ document.addEventListener('keydown', (e) => {
 });
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-console.log('🔒 GoldSilver Secure Edition loaded.');
+console.log('⚜️ GoldSilver Complete Edition loaded.');
 </script>
 </body>
 </html>
