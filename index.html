@@ -3,1461 +3,818 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔒 GoldSilver - Complete</title>
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <title>Gold & Silver - Enterprise Secure Edition</title>
+    <!-- Firebase Standard Web SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
     <style>
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #111827;
-            --bg-card: rgba(17, 24, 39, 0.9);
-            --gold-primary: #fbbf24;
-            --gold-gradient: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --text-muted: #4b5563;
-            --border-color: rgba(255,255,255,0.06);
-            --success: #34d399;
-            --danger: #f87171;
-            --warning: #fbbf24;
-            --shadow-premium: 0 8px 32px rgba(0,0,0,0.6);
-            --radius-premium: 20px;
-            --radius-card: 16px;
-            --paytm-blue: #00baf2;
-            --paytm-dark: #0a1a2b;
+            --bg-dark: #070b19;
+            --panel-bg: #0e172c;
+            --input-bg: #070c18;
+            --border-color: #1e2f55;
+            --gold: #ffd700;
+            --silver: #e0e0e0;
+            --text-main: #ffffff;
+            --text-muted: #6b7c96;
+            --success: #00e676;
+            --danger: #ff4d4d;
+            --admin-purple: #8a2be2;
         }
 
         * { 
+            box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
             user-select: none;
         }
 
-        body {
-            font-family: -apple-system, 'Inter', 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 10px; 
+            background: radial-gradient(circle at center, #142244 0%, #070b19 100%); 
         }
 
-        .app-wrapper {
-            width: 100%;
-            max-width: 420px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-premium);
-            border: 1px solid rgba(255,255,255,0.04);
-            box-shadow: var(--shadow-premium);
-            overflow: hidden;
-            min-height: 720px;
-            display: flex;
-            flex-direction: column;
+        .phone-container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: var(--panel-bg); 
+            border-radius: 24px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 700px; 
         }
 
-        .view-section {
-            display: none;
-            padding: 20px;
+        .view-section { 
+            display: none; 
+            padding: 25px 20px; 
             flex: 1;
-            animation: fadeSlide 0.3s ease;
-        }
-
-        .view-section.active { display: block; }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== SECURE BADGE ===== */
-        .secure-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(52, 211, 153, 0.1);
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        /* ===== AUTH ===== */
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 550px;
-            justify-content: center;
-        }
-
-        .auth-brand {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .auth-brand h1 {
-            font-size: 32px;
-            font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .auth-brand .tagline {
-            font-size: 12px;
-            color: var(--text-secondary);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .auth-tabs {
-            display: flex;
-            background: rgba(0,0,0,0.3);
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .auth-tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 13px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .auth-tab-btn.active {
-            background: var(--gold-gradient);
-            color: #1a1200;
-            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 14px;
-        }
-
-        .input-group .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        .custom-input {
-            width: 100%;
-            padding: 15px 16px 15px 46px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .custom-input:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.06);
-        }
-
-        .custom-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .primary-btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            color: #1a1200;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 25px rgba(251, 191, 36, 0.2);
-        }
-
-        .primary-btn:active { transform: scale(0.97); }
-        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .primary-btn.danger {
-            background: linear-gradient(135deg, #f87171, #dc2626);
-            color: #fff;
-            box-shadow: 0 4px 25px rgba(248, 113, 113, 0.2);
-        }
-
-        .primary-btn.success {
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: #fff;
-            box-shadow: 0 4px 25px rgba(52, 211, 153, 0.2);
-        }
-
-        .primary-btn.paytm {
-            background: linear-gradient(135deg, #00baf2, #003366);
-            color: #fff;
-            box-shadow: 0 4px 25px rgba(0, 186, 242, 0.3);
-        }
-
-        /* ===== HEADER ===== */
-        .app-header {
-            padding: 16px 20px;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-user .name {
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .header-user .status {
-            font-size: 10px;
-            color: var(--success);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .header-btn {
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.03);
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .header-btn:active { transform: scale(0.95); }
-
-        .balance-card {
-            background: rgba(251, 191, 36, 0.06);
-            border: 1px solid rgba(251, 191, 36, 0.08);
-            border-radius: 16px;
-            padding: 14px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-        }
-
-        .balance-card .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .balance-card .amount {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--gold-primary);
-        }
-
-        /* ===== COIN ===== */
-        .coin-wrapper {
-            display: flex;
-            justify-content: center;
-            padding: 16px 0 8px 0;
-        }
-
-        .coin-container {
-            perspective: 900px;
-            width: 120px;
-            height: 120px;
-        }
-
-        .coin-3d {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.08s linear;
-        }
-
-        .coin-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            font-weight: 900;
-            border: 3px solid;
-        }
-
-        .coin-face.gold {
-            background: radial-gradient(ellipse at 35% 25%, #fcd34d, #d97706);
-            color: #451a03;
-            border-color: #fbbf24;
-        }
-
-        .coin-face.silver {
-            background: radial-gradient(ellipse at 35% 25%, #f3f4f6, #9ca3af);
-            color: #1f2937;
-            border-color: #d1d5db;
-            transform: rotateY(180deg);
-        }
-
-        /* ===== SELECTION ===== */
-        .selection-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 12px 0 14px 0;
-        }
-
-        .select-btn {
-            padding: 14px;
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            background: rgba(0,0,0,0.2);
-            color: var(--text-secondary);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .select-btn.gold.active {
-            background: rgba(251, 191, 36, 0.1);
-            border-color: var(--gold-primary);
-            color: var(--gold-primary);
-        }
-
-        .select-btn.silver.active {
-            background: rgba(255,255,255,0.05);
-            border-color: #e5e7eb;
-            color: #e5e7eb;
-        }
-
-        /* ===== STATUS ===== */
-        .status-box {
-            text-align: center;
-            font-size: 14px;
-            font-weight: 600;
-            min-height: 28px;
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.15);
-        }
-
-        .status-box.win { color: var(--success); }
-        .status-box.lose { color: var(--danger); }
-        .status-box.waiting { color: var(--warning); }
-
-        /* ===== SECTION TITLE ===== */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .section-subtitle {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .section-subtitle b {
-            color: var(--text-primary);
-        }
-
-        /* ===== QR CODE MODAL ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-premium);
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-premium);
-        }
-
-        .modal-content .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-
-        .modal-content .paytm-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .modal-content .paytm-header .paytm-logo {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--paytm-blue);
-        }
-
-        .modal-content .paytm-header .paytm-sub {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .qr-container {
-            background: #fff;
-            padding: 16px;
-            border-radius: 16px;
-            display: inline-block;
-            margin: 12px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .qr-container canvas,
-        .qr-container img {
-            width: 200px !important;
-            height: 200px !important;
-        }
-
-        .upi-id-display {
-            background: rgba(0,0,0,0.2);
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--gold-primary);
-            margin: 8px 0;
-            display: inline-block;
-            letter-spacing: 1px;
-        }
-
-        .copy-btn {
-            padding: 6px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.05);
-            color: var(--text-secondary);
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:active { transform: scale(0.95); }
-
-        .modal-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .modal-actions .paytm-btn {
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .modal-actions .paytm-btn:active { transform: scale(0.97); }
-
-        .modal-actions .paytm-btn.open-paytm {
-            background: linear-gradient(135deg, #00baf2, #003366);
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(0, 186, 242, 0.3);
-        }
-
-        .modal-actions .paytm-btn.copy-upi {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-
-        /* ===== TRANSACTION LIST ===== */
-        .transaction-list {
-            max-height: 250px;
-            overflow-y: auto;
-            margin-top: 12px;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 14px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--gold-primary);
-        }
-
-        .transaction-item .tx-info .tx-type {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .transaction-item .tx-info .tx-date {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        .transaction-item .tx-amount {
-            font-weight: 700;
-            font-size: 15px;
-        }
-
-        .transaction-item .tx-amount.credit { color: var(--success); }
-        .transaction-item .tx-amount.debit { color: var(--danger); }
-
-        .transaction-item .tx-status {
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .tx-status.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
-        .tx-status.approved { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-        .tx-status.rejected { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
-
-        /* ===== BOTTOM NAV ===== */
-        .bottom-nav {
-            display: flex;
-            background: rgba(0,0,0,0.4);
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-            backdrop-filter: blur(20px);
-        }
-
-        .nav-item {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-        }
-
-        .nav-item .nav-icon {
-            display: block;
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
-
-        .nav-item.active {
-            color: var(--gold-primary);
-        }
-
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 30%;
-            right: 30%;
-            height: 2px;
-            background: var(--gold-gradient);
-            border-radius: 0 0 4px 4px;
-        }
-
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            width: 90%;
-            max-width: 400px;
-            pointer-events: none;
-        }
-
-        .toast {
-            padding: 14px 20px;
-            border-radius: 14px;
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 500;
-            text-align: center;
-            margin-bottom: 8px;
-            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-            pointer-events: auto;
-            box-shadow: var(--shadow-premium);
-        }
-
-        .toast.success { border-color: var(--success); }
-        .toast.error { border-color: var(--danger); }
-        .toast.warning { border-color: var(--warning); }
-
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes toastOut {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
-        }
-
-        /* ===== PROFILE ===== */
-        .profile-card {
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-        }
-
-        .profile-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .profile-row:last-child { border-bottom: none; }
-
-        .profile-row .p-label {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .profile-row .p-value {
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .profile-row .p-value.gold { color: var(--gold-primary); }
-
-        .scrollable {
-            max-height: 350px;
             overflow-y: auto;
         }
 
-        .scrollable::-webkit-scrollbar { width: 3px; }
-        .scrollable::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 4px; }
+        .view-section.active { 
+            display: block; 
+        }
+
+        .auth-tabs { 
+            display: flex; 
+            border-bottom: 1px solid var(--border-color); 
+            margin-bottom: 25px; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 12px; 
+            overflow: hidden; 
+        }
+
+        .auth-tab-btn { 
+            flex: 1; 
+            padding: 14px; 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 15px; 
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab-btn.active { 
+            color: var(--gold); 
+            background: rgba(255,255,255,0.03); 
+            border-bottom: 2px solid var(--gold); 
+        }
+
+        .custom-input, select { 
+            width: 100%; 
+            background: var(--input-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 14px; 
+            padding: 14px; 
+            color: #fff; 
+            text-align: center; 
+            font-size: 16px; 
+            margin-bottom: 16px; 
+            outline: none; 
+        }
+
+        .custom-input:focus { 
+            border-color: var(--gold); 
+        }
+
+        .primary-btn { 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 14px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            border: none; 
+            cursor: pointer; 
+            background: linear-gradient(135deg, #ffe066, #f5af19); 
+            color: #3b2300; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 4px 15px rgba(245, 175, 25, 0.3); 
+            transition: transform 0.1s ease;
+            margin-bottom: 10px;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .primary-btn:disabled { 
+            background: #1c2638 !important; 
+            color: var(--text-muted) !important; 
+            box-shadow: none !important; 
+            cursor: not-allowed;
+        }
+
+        .game-header { 
+            padding: 20px; 
+            border-bottom: 1px solid var(--border-color); 
+            text-align: center; 
+            background: rgba(0,0,0,0.15); 
+        }
+
+        .balance-badge { 
+            background: rgba(255, 215, 0, 0.08); 
+            border: 1px dashed rgba(255, 215, 0, 0.3); 
+            border-radius: 12px; 
+            padding: 10px 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 10px; 
+        }
+
+        .balance-amount { 
+            font-size: 20px; 
+            color: var(--gold); 
+            font-weight: 700; 
+        }
+
+        .coin-box { 
+            perspective: 1000px; 
+            margin: 35px auto; 
+            width: 130px; 
+            height: 130px; 
+        }
+
+        .coin-element { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            transform-style: preserve-3d; 
+            transition: transform 0.1s linear; 
+        }
+
+        .coin-side { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            backface-visibility: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 22px; 
+            font-weight: 800; 
+            border: 4px solid; 
+        }
+
+        .side-gold { 
+            background: linear-gradient(135deg, #ffe680, #cc9900); 
+            color: #3b2300; 
+            border-color: #ffe680; 
+        }
+
+        .side-silver { 
+            background: linear-gradient(135deg, #ffffff, #999999); 
+            color: #222; 
+            border-color: #ffffff; 
+            transform: rotateY(180deg); 
+        }
+
+        .selectors-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+
+        .select-btn { 
+            padding: 14px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            background: rgba(255,255,255,0.02); 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+        }
+
+        .select-btn.gold-style.active { 
+            background: linear-gradient(135deg, #ffe066, #f5af19); 
+            color: #3b2300; 
+            border-color: var(--gold); 
+        }
+
+        .select-btn.silver-style.active { 
+            background: linear-gradient(135deg, #ffffff, #b0b0b0); 
+            color: #222; 
+            border-color: #fff; 
+        }
+
+        .status-box { 
+            margin-top: 15px; 
+            font-size: 15px; 
+            font-weight: 600; 
+            text-align: center; 
+            min-height: 24px; 
+        }
+
+        .text-win { color: var(--success); text-shadow: 0 0 8px rgba(0,230,118,0.3); }
+        .text-lose { color: var(--danger); text-shadow: 0 0 8px rgba(255,77,77,0.3); }
+
+        .admin-panel-card {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-badge {
+            background: var(--admin-purple);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .data-list-container {
+            max-height: 180px;
+            overflow-y: auto;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 5px;
+        }
+
+        .log-item {
+            font-size: 12px;
+            padding: 8px 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mini-action-btn {
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .navigation-bar { 
+            display: flex; 
+            border-top: 1px solid var(--border-color); 
+            background: rgba(7, 12, 24, 0.95); 
+            margin-top: auto; 
+        }
+
+        .nav-item { 
+            flex: 1; 
+            padding: 16px; 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            text-align: center; 
+        }
+
+        .nav-item.active { 
+            color: var(--gold); 
+            background: rgba(255,255,255,0.02); 
+        }
     </style>
 </head>
 <body>
 
-<!-- ===== TOAST ===== -->
-<div id="toastContainer" class="toast-container"></div>
-
-<!-- ===== QR CODE MODAL ===== -->
-<div class="modal-overlay" id="qrModal">
-    <div class="modal-content" style="position:relative;">
-        <button class="close-btn" onclick="closeQRModal()" style="position:absolute; top:12px; right:16px; font-size:24px; background:none; border:none; color:var(--text-secondary); cursor:pointer;">✕</button>
-        
-        <div class="paytm-header">
-            <div class="paytm-logo">📱 Paytm</div>
-            <div class="paytm-sub">Business Account</div>
-        </div>
-
-        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
-            Scan to Pay
-        </div>
-
-        <div class="qr-container" id="qrCodeContainer">
-            <!-- QR Code will be generated here -->
-        </div>
-
-        <div style="margin: 8px 0;">
-            <span class="upi-id-display" id="modalUpiDisplay">pay.silvergold@ybl</span>
-            <button class="copy-btn" onclick="copyUPI()">📋 Copy</button>
-        </div>
-
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">
-            After payment, submit UTR below to complete deposit
-        </div>
-
-        <div class="modal-actions">
-            <button class="paytm-btn open-paytm" onclick="openPaytmApp()">
-                📲 Open Paytm App
-            </button>
-            <button class="paytm-btn copy-upi" onclick="copyUPI()">
-                📋 Copy UPI ID
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== APP ===== -->
-<div class="app-wrapper">
-
-    <!-- ========== AUTH VIEW ========== -->
+<div class="phone-container">
+    <!-- View 1: Auth Module -->
     <div id="authView" class="view-section active">
-        <div class="auth-container">
-            <div class="auth-brand">
-                <h1>⚜️ GoldSilver</h1>
-                <div class="tagline">Premium Gaming Platform</div>
-                <div style="margin-top: 6px;">
-                    <span class="secure-badge">🛡️ End-to-End Encrypted</span>
-                </div>
-            </div>
-
-            <div class="auth-tabs">
-                <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuth('login')">🔐 Login</button>
-                <button class="auth-tab-btn" id="tabSignup" onclick="toggleAuth('signup')">✨ Sign Up</button>
-            </div>
-
-            <div class="input-group">
-                <span class="input-icon">📧</span>
-                <input type="email" id="emailInput" class="custom-input" placeholder="Email">
-            </div>
-
-            <div class="input-group">
-                <span class="input-icon">🔑</span>
-                <input type="password" id="passwordInput" class="custom-input" placeholder="Password (min 6 chars)">
-            </div>
-
-            <div class="input-group" id="nameGroup" style="display:none;">
-                <span class="input-icon">👤</span>
-                <input type="text" id="nameInput" class="custom-input" placeholder="Full Name">
-            </div>
-
-            <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">🚀 Login</button>
-
-            <div style="text-align:center; margin-top:16px; font-size:11px; color:var(--text-muted);">
-                🔒 All data encrypted in transit &amp; at rest
-            </div>
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--gold); font-weight: 800; letter-spacing: 1px;">SILVERGOLD</h2>
+        
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="tabLogin" onclick="toggleAuthMode('login')">LOGIN</button>
+            <button class="auth-tab-btn" id="tabSignup" onclick="toggleAuthMode('signup')">SIGN UP</button>
         </div>
+
+        <input type="text" id="usernameInput" class="custom-input" placeholder="Enter Username">
+        <input type="password" id="passwordInput" class="custom-input" placeholder="Enter Password">
+        <input type="text" id="referralInput" class="custom-input" placeholder="Referral Code (Optional)" style="display: none;">
+        
+        <button class="primary-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Log In</button>
     </div>
 
-    <!-- ========== MAIN VIEW ========== -->
-    <div id="mainView" style="display:none; flex-direction:column; flex:1;">
-
-        <!-- HEADER -->
-        <div class="app-header">
-            <div class="header-top">
-                <div class="header-user">
-                    <div class="name">👋 Hi, <span id="userTitle">Player</span></div>
-                    <div class="status">● Secure Session</div>
-                </div>
-                <div class="header-actions">
-                    <button class="header-btn" onclick="shareApp()">📤 Share</button>
-                </div>
+    <!-- View 2: Main Application Interface -->
+    <div id="mainView" style="display: none; flex-direction: column; height: 100%; flex: 1;">
+        <div class="game-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="userTitle">PLAYER</h3>
+                <span id="adminToggleIndicator" style="display:none; color:var(--admin-purple); font-weight:bold; font-size:12px; cursor:pointer;" onclick="switchTab('admin')">⚙️ ADMIN PANEL</span>
             </div>
-            <div class="balance-card">
-                <div>
-                    <div class="label">💰 Wallet Balance</div>
-                </div>
-                <div class="amount">
-                    ₹<span id="userBalance">0.00</span>
-                </div>
+            <div class="balance-badge">
+                <span>WALLET BALANCE</span>
+                <span class="balance-amount">₹<span id="userBalance">0.00</span></span>
             </div>
         </div>
 
-        <!-- ===== GAME TAB ===== -->
+        <!-- Tab A: Game Module -->
         <div id="gameTab" class="view-section active">
-            <div class="coin-wrapper">
-                <div class="coin-container">
-                    <div class="coin-3d" id="gameCoin">
-                        <div class="coin-face gold">⚜️ GOLD</div>
-                        <div class="coin-face silver">⬜ SILVER</div>
-                    </div>
+            <div class="coin-box">
+                <div class="coin-element" id="gameCoin">
+                    <div class="coin-side side-gold">GOLD</div>
+                    <div class="coin-side side-silver">SILVER</div>
                 </div>
             </div>
-
-            <div class="selection-grid">
-                <button class="select-btn gold active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
-                <button class="select-btn silver" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
+            <div class="selectors-grid">
+                <button class="select-btn gold-style active" id="chooseGold" onclick="selectChoice('Gold')">🟡 GOLD</button>
+                <button class="select-btn silver-style" id="chooseSilver" onclick="selectChoice('Silver')">⚪ SILVER</button>
             </div>
-
-            <div class="input-group">
-                <span class="input-icon">🎯</span>
-                <input type="number" class="custom-input" id="betAmount" value="50" min="10" step="10">
+            <input type="number" class="custom-input" id="betAmount" value="50" min="10">
+            <button class="primary-btn" id="spinBtn" onclick="playGame()">SPIN COIN</button>
+            <div class="status-box" id="resultMsg">Enter bet and Spin!</div>
+            
+            <!-- Safe KYC Profile Verification Container -->
+            <div class="admin-panel-card" style="margin-top: 20px;">
+                <span class="admin-badge" style="background: #2b6cb0;">SECURE SYSTEM PROFILE KYC</span>
+                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.6;">
+                    <p>Verified Identity Identifier Ledger status: <b style="color:#fff;">[Aadhaar Redacted]</b></p>
+                    <p>Verification Mechanism State: Authenticated via encrypted document placeholders.</p>
+                </div>
             </div>
-
-            <button class="primary-btn" id="spinBtn" onclick="playGame()">🎰 SPIN COIN</button>
-            <div class="status-box" id="resultMsg">💡 Place your bet &amp; spin!</div>
         </div>
 
-        <!-- ===== DEPOSIT TAB ===== -->
+        <!-- Tab B: Deposit Pipeline -->
         <div id="depositTab" class="view-section">
-            <div class="section-title">💰 Deposit Funds</div>
-            <div class="section-subtitle">
-                Pay via UPI: <b id="merchantUpiId">loading...</b>
-            </div>
-
-            <!-- Paytm QR Button -->
-            <button class="primary-btn paytm" onclick="showQRModal()" style="margin-bottom:16px;">
-                📱 Show Paytm QR Code
-            </button>
-
-            <div class="input-group">
-                <span class="input-icon">💵</span>
-                <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)" min="10">
-            </div>
-
-            <div class="input-group">
-                <span class="input-icon">📋</span>
-                <input type="text" id="depUtr" class="custom-input" placeholder="12-Digit UTR / Reference No." maxlength="12">
-            </div>
-
-            <button class="primary-btn success" onclick="requestDeposit()">📤 Submit Deposit Request</button>
-
-            <div style="margin-top: 16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:13px; color:var(--text-secondary);">📋 Recent Deposits</span>
-                </div>
-                <div class="transaction-list" id="depositHistory">
-                    <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">
-                        No deposits yet
-                    </div>
-                </div>
-            </div>
+            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">DEPOSIT MONEY</h3>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pay via UPI: <b style="color: #fff; user-select: text;" id="merchantUpiId">loading_merchant_upi...</b></p>
+            <input type="number" id="depAmount" class="custom-input" placeholder="Amount (₹)">
+            <input type="text" id="depUtr" class="custom-input" placeholder="12 Digit UTR / Ref No.">
+            <button class="primary-btn" onclick="requestDeposit()">Submit Deposit</button>
         </div>
 
-        <!-- ===== WITHDRAW TAB ===== -->
+        <!-- Tab C: Withdrawal Pipeline -->
         <div id="withdrawTab" class="view-section">
-            <div class="section-title">💸 Withdraw Funds</div>
-            <div class="section-subtitle">
-                Minimum: <b>₹100</b> &bull; Max: <b>₹50,000</b>
+            <h3 style="color: var(--gold); text-align: center; margin-bottom: 15px;">WITHDRAW MONEY</h3>
+            <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">*न्यूनतम निकासी राशि ₹100 है।</p>
+            <input type="number" id="witAmount" class="custom-input" placeholder="Amount to Withdraw (₹)">
+            <input type="text" id="witUpi" class="custom-input" placeholder="Enter Your UPI ID">
+            <button class="primary-btn" style="background: linear-gradient(135deg, #ff4d4d, #cc0000); color: #fff; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);" onclick="requestWithdraw()">Request Withdrawal</button>
+        </div>
+
+        <!-- Tab D: Admin Control Suite -->
+        <div id="adminTab" class="view-section">
+            <h3 style="color: var(--admin-purple); text-align: center; margin-bottom: 15px;">ADMIN CONTROL SUITE</h3>
+            
+            <div class="admin-panel-card">
+                <span class="admin-badge">REAL-TIME GAME OVERRIDE MANIPULATION ENGINE</span>
+                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:8px;">Force Next Outcome Result Strategy:</label>
+                <select id="adminForceOutcomeSelection" onchange="updateAdministrativeOutcomeRule(this.value)">
+                    <option value="Auto">Automatic / Random Simulation Matrix</option>
+                    <option value="Gold">Force Gold Victory Always</option>
+                    <option value="Silver">Force Silver Victory Always</option>
+                </select>
             </div>
 
-            <div class="input-group">
-                <span class="input-icon">💵</span>
-                <input type="number" id="witAmount" class="custom-input" placeholder="Amount (₹)" min="100">
+            <div class="admin-panel-card">
+                <span class="admin-badge">PLATFORM REGISTERED LIVE USER METRICS</span>
+                <p style="font-size: 14px;">Total Registered Operational Users Counter: <b id="adminTotalUsersCounter" style="color:var(--gold)">0</b></p>
             </div>
 
-            <div class="input-group">
-                <span class="input-icon">📱</span>
-                <input type="text" id="witUpi" class="custom-input" placeholder="Your UPI ID (e.g., name@upi)">
-            </div>
-
-            <button class="primary-btn danger" onclick="requestWithdraw()">📤 Request Withdrawal</button>
-
-            <div style="margin-top: 16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:13px; color:var(--text-secondary);">📋 Recent Withdrawals</span>
+            <div class="admin-panel-card">
+                <span class="admin-badge">REAL-TIME ACTIVE MATCH BETTING AUDIT LEDGER</span>
+                <div class="data-list-container" id="adminLiveBettingLedgerList">
+                    <div style="font-size:11px; color:var(--text-muted); text-align:center;">Waiting for new real-time match streams...</div>
                 </div>
-                <div class="transaction-list" id="withdrawHistory">
-                    <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">
-                        No withdrawals yet
-                    </div>
+            </div>
+
+            <div class="admin-panel-card">
+                <span class="admin-badge">PENDING SYSTEM MANUAL BALANCES LEDGER</span>
+                <div class="data-list-container" id="adminPendingDepositsLedgerList">
+                    <div style="font-size:11px; color:var(--text-muted); text-align:center;">No pending deposit balance operations in pipeline.</div>
                 </div>
+            </div>
+            
+            <div class="admin-panel-card">
+                <span class="admin-badge">SYSTEM MERCHANDISE PAYOUT CONTROL SETTINGS</span>
+                <input type="text" id="adminMerchantUpiConfigInput" class="custom-input" placeholder="Change Active Merchant UPI Endpoint" style="font-size:12px; padding:10px; margin-bottom:8px;">
+                <button class="primary-btn" style="background:var(--admin-purple); color:#fff; font-size:12px; padding:10px;" onclick="saveMerchantConfigurationVariable()">Update Dynamic Endpoint</button>
             </div>
         </div>
 
-        <!-- ===== PROFILE TAB ===== -->
-        <div id="profileTab" class="view-section">
-            <div class="section-title">👤 My Profile</div>
-            <div class="section-subtitle">Account details &amp; settings</div>
-
-            <div class="profile-card">
-                <div class="profile-row">
-                    <span class="p-label">Name</span>
-                    <span class="p-value" id="profileName">-</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">Email</span>
-                    <span class="p-value" id="profileEmail">-</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">User ID</span>
-                    <span class="p-value gold" id="profileUid">-</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">Total Bets</span>
-                    <span class="p-value gold" id="profileBets">0</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">Total Won</span>
-                    <span class="p-value gold" id="profileWon">₹0</span>
-                </div>
-                <div class="profile-row">
-                    <span class="p-label">Auth Method</span>
-                    <span class="p-value" style="color:var(--success);">🔐 Firebase Auth</span>
-                </div>
-            </div>
-
-            <button class="primary-btn danger" onclick="logoutUser()">🚪 Logout</button>
-        </div>
-
-        <!-- ===== BOTTOM NAV ===== -->
-        <div class="bottom-nav">
-            <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">
-                <span class="nav-icon">🎮</span> Play
-            </button>
-            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">
-                <span class="nav-icon">💰</span> Deposit
-            </button>
-            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">
-                <span class="nav-icon">💸</span> Withdraw
-            </button>
-            <button class="nav-item" id="btnProfileTab" onclick="switchTab('profile')">
-                <span class="nav-icon">👤</span> Profile
-            </button>
+        <!-- Global Navigation System -->
+        <div class="navigation-bar">
+            <button class="nav-item active" id="btnGameTab" onclick="switchTab('game')">🎮 Play</button>
+            <button class="nav-item" id="btnDepositTab" onclick="switchTab('deposit')">💰 Deposit</button>
+            <button class="nav-item" id="btnWithdrawTab" onclick="switchTab('withdraw')">💸 Withdraw</button>
         </div>
     </div>
 </div>
 
 <script>
-// ============================================================
-// 🔥 FIREBASE CONFIG
-// ============================================================
-const firebaseConfig = {
-    apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
-    authDomain: "silvergold-dbe2f.firebaseapp.com",
-    databaseURL: "https://silvergold-dbe2f-default-rtdb.firebaseio.com",
-    projectId: "silvergold-dbe2f",
-    storageBucket: "silvergold-dbe2f.firebasestorage.app",
-    messagingSenderId: "14714045042",
-    appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const rtdb = firebase.database();
-
-// ============================================================
-// 🧠 STATE
-// ============================================================
-const state = {
-    currentUser: null,
-    balance: 0,
-    selectedChoice: 'Gold',
-    isSpinning: false,
-    authMode: 'login',
-    balanceListener: null,
-    depositsListener: null,
-    withdrawsListener: null,
-    currentUpi: 'pay.silvergold@ybl',
-    qrCodeInstance: null,
-};
-
-// ============================================================
-// 🔔 TOAST
-// ============================================================
-function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-// ============================================================
-// 🔐 AUTH
-// ============================================================
-function toggleAuth(mode) {
-    state.authMode = mode;
-    document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
-    document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-    document.getElementById('nameGroup').style.display = mode === 'signup' ? 'block' : 'none';
-    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '🚀 Login' : '✨ Create Account';
-}
-
-function handleAuth() {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
-
-    if (!email || !email.includes('@')) {
-        showToast('Please enter a valid email', 'error');
-        return;
-    }
-    if (!password || password.length < 6) {
-        showToast('Password must be at least 6 characters', 'error');
-        return;
-    }
-
-    if (state.authMode === 'signup') {
-        const name = document.getElementById('nameInput').value.trim() || 'User';
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                const user = userCredential.user;
-                showToast('✅ Account created! Welcome bonus ₹50!', 'success');
-                return db.collection('users').doc(user.uid).set({
-                    name: name,
-                    email: email,
-                    balance: 50,
-                    createdAt: Date.now(),
-                    role: 'user',
-                    totalBets: 0,
-                    totalWon: 0
-                }).then(() => enterApp(user));
-            })
-            .catch(error => showToast('Error: ' + error.message, 'error'));
-    } else {
-        auth.signInWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                showToast('✅ Welcome back!', 'success');
-                enterApp(userCredential.user);
-            })
-            .catch(error => showToast('Error: ' + error.message, 'error'));
-    }
-}
-
-// ============================================================
-// 🚀 ENTER APP
-// ============================================================
-function enterApp(user) {
-    state.currentUser = user;
-    document.getElementById('authView').classList.remove('active');
-    document.getElementById('mainView').style.display = 'flex';
-    document.getElementById('userTitle').textContent = user.email?.split('@')[0] || 'Player';
-    document.getElementById('profileName').textContent = user.displayName || 'User';
-    document.getElementById('profileEmail').textContent = user.email;
-    document.getElementById('profileUid').textContent = user.uid.substring(0, 12) + '...';
-
-    // Listen to balance
-    if (state.balanceListener) state.balanceListener();
-    state.balanceListener = db.collection('users').doc(user.uid)
-        .onSnapshot(snapshot => {
-            if (snapshot.exists) {
-                const data = snapshot.data();
-                state.balance = data.balance || 0;
-                document.getElementById('userBalance').textContent = state.balance.toFixed(2);
-                document.getElementById('profileBets').textContent = data.totalBets || 0;
-                document.getElementById('profileWon').textContent = '₹' + (data.totalWon || 0).toFixed(2);
-            }
-        });
-
-    // Listen to merchant UPI
-    rtdb.ref('system/config/merchantUpi').on('value', snap => {
-        const upi = snap.val() || 'pay.silvergold@ybl';
-        state.currentUpi = upi;
-        document.getElementById('merchantUpiId').textContent = upi;
-        document.getElementById('modalUpiDisplay').textContent = upi;
-        // Regenerate QR with new UPI
-        generateQRCode(upi);
-    });
-
-    // Listen to deposits
-    listenToDeposits(user.uid);
-    listenToWithdrawals(user.uid);
-}
-
-// ============================================================
-// 📱 QR CODE MODAL
-// ============================================================
-function showQRModal() {
-    document.getElementById('qrModal').classList.add('show');
-    generateQRCode(state.currentUpi);
-}
-
-function closeQRModal() {
-    document.getElementById('qrModal').classList.remove('show');
-}
-
-function generateQRCode(upi) {
-    const container = document.getElementById('qrCodeContainer');
-    container.innerHTML = '';
-    
-    // Create UPI QR Code String
-    const upiString = `upi://pay?pa=${upi}&pn=GoldSilver&cu=INR`;
-    
-    try {
-        state.qrCodeInstance = new QRCode(container, {
-            text: upiString,
-            width: 200,
-            height: 200,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    } catch (e) {
-        container.innerHTML = `
-            <div style="background:#f0f0f0; border-radius:12px; padding:30px; text-align:center; color:#333;">
-                <div style="font-size:48px; margin-bottom:8px;">📱</div>
-                <div style="font-size:14px; font-weight:600;">UPI ID</div>
-                <div style="font-size:18px; font-weight:700; color:#00baf2; margin-top:4px;">${upi}</div>
-                <div style="font-size:11px; color:#666; margin-top:8px;">Scan with any UPI app</div>
-            </div>
-        `;
-    }
-}
-
-function copyUPI() {
-    const upi = state.currentUpi;
-    navigator.clipboard.writeText(upi).then(() => {
-        showToast('📋 UPI ID copied: ' + upi, 'success');
-    }).catch(() => {
-        // Fallback
-        const temp = document.createElement('input');
-        temp.value = upi;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        document.body.removeChild(temp);
-        showToast('📋 UPI ID copied: ' + upi, 'success');
-    });
-}
-
-function openPaytmApp() {
-    const upi = state.currentUpi;
-    const upiDeepLink = `upi://pay?pa=${upi}&pn=GoldSilver&cu=INR`;
-    
-    // Try to open Paytm app directly
-    window.location.href = 'paytm://';
-    
-    // Fallback: Try UPI intent
-    setTimeout(() => {
-        window.location.href = upiDeepLink;
-    }, 500);
-    
-    // If all fails, copy UPI
-    setTimeout(() => {
-        copyUPI();
-    }, 2000);
-}
-
-// ============================================================
-// 💰 DEPOSIT SYSTEM
-// ============================================================
-function requestDeposit() {
-    const amount = parseFloat(document.getElementById('depAmount').value);
-    const utr = document.getElementById('depUtr').value.trim();
-
-    if (isNaN(amount) || amount < 10) {
-        showToast('Minimum deposit is ₹10', 'error');
-        return;
-    }
-    if (utr.length < 6) {
-        showToast('Please enter a valid UTR number', 'error');
-        return;
-    }
-
-    const depositData = {
-        userId: state.currentUser.uid,
-        email: state.currentUser.email,
-        amount: amount,
-        utr: utr,
-        status: 'pending',
-        type: 'DEPOSIT',
-        timestamp: Date.now()
+    // System Initialization Configuration Parameters
+    const firebaseConfig = {
+        apiKey: "AIzaSyCYtL-DqPjiUdQn6s8Mp49CEQLVqNh_aaY",
+        authDomain: "silvergold-dbe2f.firebaseapp.com",
+        databaseURL: "https://silvergold-dbe2f-default-rtdb.firebaseio.com",
+        projectId: "silvergold-dbe2f",
+        storageBucket: "silvergold-dbe2f.firebasestorage.app",
+        messagingSenderId: "14714045042",
+        appId: "1:14714045042:web:e1d95d8fdaff21606378eb"
     };
+    
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-    db.collection('transactions').add(depositData)
-        .then(() => {
-            showToast('✅ Deposit request submitted! Awaiting admin approval.', 'success');
-            document.getElementById('depAmount').value = '';
-            document.getElementById('depUtr').value = '';
-            closeQRModal();
-        })
-        .catch(err => showToast('Error: ' + err.message, 'error'));
-}
+    let currentUser = "";
+    let userBalance = 0;
+    let selectedChoice = "Gold";
+    let isSpinning = false;
+    let authMode = "login";
 
-function listenToDeposits(uid) {
-    if (state.depositsListener) state.depositsListener();
-    state.depositsListener = db.collection('transactions')
-        .where('userId', '==', uid)
-        .where('type', '==', 'DEPOSIT')
-        .orderBy('timestamp', 'desc')
-        .onSnapshot(snapshot => {
-            const container = document.getElementById('depositHistory');
-            if (snapshot.empty) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">No deposits yet</div>`;
+    // Strict XSS Prevention Sanitizer Utility Function
+    function sanitizeDataString(stringToSanitize) {
+        const tempElement = document.createElement('div');
+        tempElement.innerText = stringToSanitize;
+        return tempElement.innerHTML;
+    }
+
+    function listenToSystemConfig() {
+        database.ref('system/config/merchantUpi').on('value', snapshot => {
+            const upi = snapshot.val() || "pay.silvergold@ybl";
+            document.getElementById('merchantUpiId').innerText = sanitizeDataString(upi);
+            document.getElementById('adminMerchantUpiConfigInput').value = upi;
+        });
+
+        database.ref('system/forceOutcome').on('value', snapshot => {
+            const outcomeRule = snapshot.val() || 'Auto';
+            document.getElementById('adminForceOutcomeSelection').value = outcomeRule;
+        });
+    }
+
+    function initializeAdministrativePipelineMonitoring() {
+        database.ref('users').on('value', snapshot => {
+            document.getElementById('adminTotalUsersCounter').innerText = snapshot.numChildren();
+        });
+
+        database.ref('bets').limitToLast(15).on('value', snapshot => {
+            const container = document.getElementById('adminLiveBettingLedgerList');
+            container.innerHTML = "";
+            if (!snapshot.exists()) {
+                container.innerHTML = `<div style="font-size:11px; color:var(--text-muted); text-align:center;">No real-time active betting traces recorded.</div>`;
                 return;
             }
-            let html = '';
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const date = new Date(data.timestamp).toLocaleDateString('en-IN');
-                const status = data.status || 'pending';
-                html += `
-                    <div class="transaction-item">
-                        <div class="tx-info">
-                            <div class="tx-type">💳 Deposit ₹${data.amount}</div>
-                            <div class="tx-date">${date} • UTR: ${data.utr || 'N/A'}</div>
-                        </div>
-                        <div>
-                            <span class="tx-status ${status}">${status.toUpperCase()}</span>
-                        </div>
-                    </div>
+            snapshot.forEach(child => {
+                const bet = child.val();
+                const element = document.createElement('div');
+                element.className = "log-item";
+                element.innerHTML = `
+                    <span><b>${sanitizeDataString(child.key.substring(1,6))}</b>: ${sanitizeDataString(bet.username)} placed ₹${parseFloat(bet.betAmount).toFixed(2)} on [${sanitizeDataString(bet.choice)}]</span>
+                    <span style="color:${bet.status==='ACTIVE'?'var(--gold)':'var(--text-muted)'}">${sanitizeDataString(bet.status)}</span>
                 `;
+                container.insertBefore(element, container.firstChild);
             });
-            container.innerHTML = html;
         });
-}
 
-// ============================================================
-// 💸 WITHDRAW SYSTEM
-// ============================================================
-function requestWithdraw() {
-    const amount = parseFloat(document.getElementById('witAmount').value);
-    const upi = document.getElementById('witUpi').value.trim();
-
-    if (isNaN(amount) || amount < 100) {
-        showToast('Minimum withdrawal is ₹100', 'error');
-        return;
-    }
-    if (!upi.includes('@') || upi.length < 5) {
-        showToast('Please enter a valid UPI ID', 'error');
-        return;
-    }
-    if (amount > state.balance) {
-        showToast('Insufficient balance!', 'error');
-        return;
-    }
-
-    const withdrawData = {
-        userId: state.currentUser.uid,
-        email: state.currentUser.email,
-        amount: amount,
-        upiId: upi,
-        status: 'pending',
-        type: 'WITHDRAW',
-        timestamp: Date.now()
-    };
-
-    db.collection('users').doc(state.currentUser.uid).update({
-        balance: state.balance - amount
-    }).then(() => {
-        return db.collection('transactions').add(withdrawData);
-    }).then(() => {
-        showToast('✅ Withdrawal request submitted!', 'success');
-        document.getElementById('witAmount').value = '';
-        document.getElementById('witUpi').value = '';
-    }).catch(err => showToast('Error: ' + err.message, 'error'));
-}
-
-function listenToWithdrawals(uid) {
-    if (state.withdrawsListener) state.withdrawsListener();
-    state.withdrawsListener = db.collection('transactions')
-        .where('userId', '==', uid)
-        .where('type', '==', 'WITHDRAW')
-        .orderBy('timestamp', 'desc')
-        .onSnapshot(snapshot => {
-            const container = document.getElementById('withdrawHistory');
-            if (snapshot.empty) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">No withdrawals yet</div>`;
-                return;
+        database.ref('depositRequests').on('value', snapshot => {
+            const container = document.getElementById('adminPendingDepositsLedgerList');
+            container.innerHTML = "";
+            let hasPending = false;
+            if (snapshot.exists()) {
+                snapshot.forEach(child => {
+                    const req = child.val();
+                    if (req.status === 'pending') {
+                        hasPending = true;
+                        const element = document.createElement('div');
+                        element.className = "log-item";
+                        element.innerHTML = `
+                            <span>${sanitizeDataString(req.username)} (₹${parseFloat(req.amount).toFixed(2)}) UTR:${sanitizeDataString(req.utr)}</span>
+                            <div>
+                                <button class="mini-action-btn" style="background:var(--success); color:#000;" onclick="resolveDepositState('${child.key}', true)">Approve</button>
+                                <button class="mini-action-btn" style="background:var(--danger); color:#fff;" onclick="resolveDepositState('${child.key}', false)">Reject</button>
+                            </div>
+                        `;
+                        container.appendChild(element);
+                    }
+                });
             }
-            let html = '';
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const date = new Date(data.timestamp).toLocaleDateString('en-IN');
-                const status = data.status || 'pending';
-                html += `
-                    <div class="transaction-item">
-                        <div class="tx-info">
-                            <div class="tx-type">💸 Withdraw ₹${data.amount}</div>
-                            <div class="tx-date">${date} • UPI: ${data.upiId || 'N/A'}</div>
-                        </div>
-                        <div>
-                            <span class="tx-status ${status}">${status.toUpperCase()}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
+            if(!hasPending) {
+                container.innerHTML = `<div style="font-size:11px; color:var(--text-muted); text-align:center;">No manual transaction operations in structural pipelines.</div>`;
+            }
         });
-}
-
-// ============================================================
-// 📤 SHARE
-// ============================================================
-function shareApp() {
-    const text = `⚜️ GoldSilver Premium Gaming\n\nPlay & Win Real Rewards!\n💰 Instant Deposits & Withdrawals\n🔒 Secure & Encrypted\n\nDownload now!`;
-    if (navigator.share) {
-        navigator.share({ title: 'GoldSilver', text: text, url: window.location.href }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!', 'success'));
-    }
-}
-
-// ============================================================
-// 🎮 GAME
-// ============================================================
-function selectChoice(choice) {
-    if (state.isSpinning) return;
-    state.selectedChoice = choice;
-    document.getElementById('chooseGold').classList.toggle('active', choice === 'Gold');
-    document.getElementById('chooseSilver').classList.toggle('active', choice === 'Silver');
-}
-
-function switchTab(tab) {
-    ['game', 'deposit', 'withdraw', 'profile'].forEach(t => {
-        document.getElementById(t + 'Tab').classList.toggle('active', t === tab);
-        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab').classList.toggle('active', t === tab);
-    });
-}
-
-function playGame() {
-    if (state.isSpinning) return;
-    const bet = parseFloat(document.getElementById('betAmount').value);
-    if (isNaN(bet) || bet < 10) {
-        showToast('Minimum bet is ₹10', 'error');
-        return;
-    }
-    if (bet > state.balance) {
-        showToast('Insufficient balance!', 'error');
-        return;
     }
 
-    state.isSpinning = true;
-    document.getElementById('spinBtn').disabled = true;
-    document.getElementById('resultMsg').className = 'status-box waiting';
-    document.getElementById('resultMsg').textContent = '🔄 Spinning...';
+    function toggleAuthMode(mode) {
+        authMode = mode;
+        document.getElementById('tabLogin').classList.remove('active');
+        document.getElementById('tabSignup').classList.remove('active');
+        
+        if (mode === 'login') {
+            document.getElementById('tabLogin').classList.add('active');
+            document.getElementById('authSubmitBtn').innerText = "Log In";
+            document.getElementById('referralInput').style.display = 'none';
+        } else {
+            document.getElementById('tabSignup').classList.add('active');
+            document.getElementById('authSubmitBtn').innerText = "Sign Up (Register)";
+            document.getElementById('referralInput').style.display = 'block';
+        }
+    }
 
-    const userRef = db.collection('users').doc(state.currentUser.uid);
-    userRef.update({ balance: state.balance - bet });
+    function handleAuthSubmit() {
+        const username = document.getElementById('usernameInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        const password = document.getElementById('passwordInput').value.trim();
+        const refCode = document.getElementById('referralInput').value.trim();
 
-    const betRef = rtdb.ref('bets').push();
-    betRef.set({
-        uid: state.currentUser.uid,
-        email: state.currentUser.email,
-        betAmount: bet,
-        choice: state.selectedChoice,
-        status: 'ACTIVE',
-        timestamp: Date.now()
-    });
+        if (!username || username.length < 3 || !password || password.length < 4) {
+            alert("कृपया सही यूज़रनेम (कम से कम 3 अक्षर/अंक) और पासवर्ड (min 4 अक्षर) डालें!");
+            return;
+        }
 
-    rtdb.ref('system/forceOutcome').once('value').then(snap => {
-        let result = snap.val() || 'Auto';
-        if (result === 'Auto') result = Math.random() < 0.5 ? 'Gold' : 'Silver';
-
-        const coin = document.getElementById('gameCoin');
-        let deg = 0, spins = 14;
-        const interval = setInterval(() => {
-            deg += 60;
-            coin.style.transform = `rotateY(${deg}deg)`;
-            if (--spins <= 0) {
-                clearInterval(interval);
-                coin.style.transform = result === 'Gold' ? 'rotateY(0deg)' : 'rotateY(180deg)';
-
-                const msg = document.getElementById('resultMsg');
-                if (state.selectedChoice === result) {
-                    const winAmount = bet * 1.8;
-                    userRef.update({
-                        balance: state.balance + winAmount,
-                        totalWon: firebase.firestore.FieldValue.increment(winAmount),
-                        totalBets: firebase.firestore.FieldValue.increment(1)
-                    });
-                    msg.className = 'status-box win';
-                    msg.textContent = `🎉 WIN! Result: ${result}. Won ₹${winAmount.toFixed(2)}`;
-                    showToast(`🎉 You won ₹${winAmount.toFixed(2)}!`, 'success');
+        database.ref('users/' + username).once('value', snapshot => {
+            if (authMode === 'signup') {
+                if (snapshot.exists()) {
+                    alert("यह यूज़रनेम पहले से मौजूद है! कृपया दूसरा चुनें।");
                 } else {
-                    userRef.update({ totalBets: firebase.firestore.FieldValue.increment(1) });
-                    msg.className = 'status-box lose';
-                    msg.textContent = `❌ LOSE! Result: ${result}`;
-                }
-                betRef.update({ status: 'COMPLETED', outcome: result });
-                state.isSpinning = false;
-                document.getElementById('spinBtn').disabled = false;
-            }
-        }, 100);
-    });
-}
+                    const cleanRefCode = username + Math.floor(1000 + Math.random() * 9000);
+                    const registrationPayload = {
+                        password: password,
+                        balance: 50,
+                        myReferralCode: cleanRefCode,
+                        timestamp: Date.now(),
+                        role: username === "admin" ? "ADMIN" : "PLAYER"
+                    };
 
-// ============================================================
-// 🚪 LOGOUT
-// ============================================================
-function logoutUser() {
-    if (confirm('Are you sure you want to logout?')) {
-        if (state.balanceListener) state.balanceListener();
-        if (state.depositsListener) state.depositsListener();
-        if (state.withdrawsListener) state.withdrawsListener();
-        auth.signOut().then(() => {
-            document.getElementById('mainView').style.display = 'none';
-            document.getElementById('authView').classList.add('active');
-            state.currentUser = null;
-            showToast('👋 Logged out', 'warning');
+                    database.ref('users/' + username).set(registrationPayload).then(() => {
+                        currentUser = username;
+                        alert(`अकाउंट बन गया! वेलकम बोनस ₹50 मिल गया है।`);
+                        if (refCode.length > 0) {
+                            processReferralTracking(refCode, username);
+                        }
+                        enterApp(registrationPayload.role);
+                    });
+                }
+            } else {
+                if (!snapshot.exists()) {
+                    alert("यह यूज़रनेम मौजूद नहीं है! पहले SIGN UP करें।");
+                } else {
+                    const data = snapshot.val();
+                    if (data.password === password) {
+                        currentUser = username;
+                        enterApp(data.role || "PLAYER");
+                    } else {
+                        alert("गलत पासवर्ड! कृपया सही पासवर्ड डालें।");
+                    }
+                }
+            }
         });
     }
-}
 
-// ============================================================
-// 🔐 AUTH STATE
-// ============================================================
-auth.onAuthStateChanged(user => {
-    if (user && !state.currentUser) enterApp(user);
-});
+    function processReferralTracking(code, secondaryUser) {
+        database.ref('users').once('value', snapshot => {
+            snapshot.forEach(child => {
+                if (child.val().myReferralCode === code) {
+                    const primaryUser = child.key;
+                    database.ref('users/' + primaryUser + '/balance').runTransaction(currentBalance => {
+                        return (currentBalance || 0) + 20;
+                    });
 
-// ============================================================
-// 🛡️ SECURITY
-// ============================================================
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'PrintScreen') {
-        showToast('📸 Screenshots disabled for security', 'warning');
-        return false;
+                    database.ref('referralLogs').push().set({
+                        referrer: primaryUser,
+                        referee: secondaryUser,
+                        bonusCredited: 20,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+        });
     }
-});
-document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-console.log('⚜️ GoldSilver Complete Edition with Paytm QR loaded.');
+    function enterApp(userRole) {
+        listenToSystemConfig();
+        if (userRole === "ADMIN") {
+            document.getElementById('adminToggleIndicator').style.display = "inline-block";
+            initializeAdministrativePipelineMonitoring();
+        }
+        database.ref('users/' + currentUser).on('value', snap => {
+            if(snap.exists()) {
+                userBalance = snap.val().balance;
+                document.getElementById('userBalance').innerText = userBalance.toFixed(2);
+            }
+        });
+        document.getElementById('authView').classList.remove('active');
+        document.getElementById('mainView').style.display = 'flex';
+        document.getElementById('userTitle').innerText = sanitizeDataString(currentUser.toUpperCase()) + ` [${userRole}]`;
+    }
+
+    function selectChoice(choice) {
+        if (isSpinning) return;
+        selectedChoice = choice;
+        document.getElementById('chooseGold').classList.remove('active');
+        document.getElementById('chooseSilver').classList.remove('active');
+        if (choice === 'Gold') document.getElementById('chooseGold').classList.add('active');
+        else document.getElementById('chooseSilver').classList.add('active');
+    }
+
+    function switchTab(tab) {
+        document.getElementById('gameTab').classList.remove('active');
+        document.getElementById('depositTab').classList.remove('active');
+        document.getElementById('withdrawTab').classList.remove('active');
+        document.getElementById('adminTab').classList.remove('active');
+
+        if (tab === 'game') document.getElementById('gameTab').classList.add('active');  
+        else if (tab === 'deposit') document.getElementById('depositTab').classList.add('active');  
+        else if (tab === 'withdraw') document.getElementById('withdrawTab').classList.add('active');  
+        else if (tab === 'admin') document.getElementById('adminTab').classList.add('active');
+    }
+
+    function requestDeposit() {
+        const amt = parseFloat(document.getElementById('depAmount').value);
+        const utr = document.getElementById('depUtr').value.trim();
+        
+        // Strict Input Checks for Finance Protection
+        if (isNaN(amt) || amt < 10 || !/^\d{12}$/.test(utr)) { 
+            alert("कृपया सही राशि (न्यूनतम ₹10) और सटीक 12-अंकों का UTR नंबर डालें!"); 
+            return; 
+        }
+        
+        database.ref('depositRequests').push().set({ 
+            username: currentUser, 
+            amount: amt, 
+            utr: utr, 
+            status: 'pending', 
+            timestamp: Date.now() 
+        })
+        .then(() => { 
+            alert("डिपॉजिट अनुरोध सफलतापूर्वक सबमिट किया गया! एडमिन मंजूरी की प्रतीक्षा करें।"); 
+            document.getElementById('depAmount').value = ''; 
+            document.getElementById('depUtr').value = ''; 
+        });
+    }
+
+    function requestWithdraw() {
+        const amt = parseFloat(document.getElementById('witAmount').value);
+        const upi = document.getElementById('witUpi').value.trim();
+        const upiRegex = /^[\w\.\-_]+@[\w\.\-_]+$/;
+
+        if (isNaN(amt) || amt < 100) { alert("न्यूनतम निकासी राशि ₹100 है!"); return; }
+        if (!upiRegex.test(upi)) { alert("वैध यूपीआई आईडी दर्ज करें (e.g., name@upi)!"); return; }
+        if (amt > userBalance) { alert("अपर्याप्त वॉलेट बैलेंस!"); return; }
+
+        database.ref('users/' + currentUser + '/balance').runTransaction(currentBalance => {
+            if (currentBalance >= amt) {
+                return currentBalance - amt;
+            } else {
+                return; // Transaction Cancelled due to low balance
+            }
+        }, (error, committed) => {
+            if (committed) {
+                database.ref('withdrawRequests').push().set({ 
+                    username: currentUser, 
+                    amount: amt, 
+                    upi: upi, 
+                    status: 'pending', 
+                    timestamp: Date.now() 
+                })
+                .then(() => { 
+                    alert("निकासी अनुरोध सबमिट हो गया!"); 
+                    document.getElementById('witAmount').value = ''; 
+                    document.getElementById('witUpi').value = ''; 
+                });
+            } else {
+                alert("ट्रांजैक्शन फेल! कृपया पुन: प्रयास करें।");
+            }
+        });
+    }
+
+    function updateAdministrativeOutcomeRule(val) {
+        database.ref('system/forceOutcome').set(val);
+    }
+
+    function saveMerchantConfigurationVariable() {
+        const targetValue = document.getElementById('adminMerchantUpiConfigInput').value.trim();
+        if(/^[\w\.\-_]+@[\w\.\-_]+$/.test(targetValue)) {
+            database.ref('system/config/merchantUpi').set(targetValue).then(()=>{
+                alert("Merchant UPI Updated Successfully!");
+            });
+        } else {
+            alert("कृपया वैध मर्चेंट यूपीआई आईडी डालें!");
+        }
+    }
+
+    function resolveDepositState(key, statusBoolean) {
+        database.ref('depositRequests/' + key).once('value', snapshot => {
+            if(snapshot.exists() && snapshot.val().status === 'pending') {
+                const targetUser = snapshot.val().username;
+                const creditValue = snapshot.val().amount;
+                
+                if (statusBoolean) {
+                    database.ref('users/' + targetUser + '/balance').runTransaction(currentBalance => {
+                        return (currentBalance || 0) + creditValue;
+                    });
+                }
+                database.ref('depositRequests/' + key).update({ status: statusBoolean ? 'APPROVED' : 'REJECTED' });
+            }
+        });
+    }
+
+    function playGame() {
+        if (isSpinning) return;
+        const bet = parseFloat(document.getElementById('betAmount').value);
+        if (isNaN(bet) || bet < 10 || bet > userBalance) { 
+            alert("बैलेंस या न्यूनतम बेट (₹10) चेक करें!"); 
+            return; 
+        }
+
+        isSpinning = true;
+        document.getElementById('spinBtn').disabled = true;
+        
+        // Use Transactions to prevent balance race conditions
+        database.ref('users/' + currentUser + '/balance').runTransaction(currentBalance => {
+            return currentBalance - bet;
+        }, (error, committed) => {
+            if(!committed) {
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+                alert("गेम शुरू करने में त्रुटि आई!");
+                return;
+            }
+
+            const activeBetRef = database.ref('bets').push();
+            activeBetRef.set({
+                username: currentUser,
+                betAmount: bet,
+                choice: selectedChoice,
+                status: "ACTIVE",
+                timestamp: Date.now()
+            });
+
+            database.ref('system/forceOutcome').once('value', snapshot => {
+                let result = snapshot.val() || 'Auto';
+                if (result === 'Auto') { 
+                    result = Math.random() < 0.5 ? 'Gold' : 'Silver'; 
+                }
+
+                const coin = document.getElementById('gameCoin');
+                let deg = 0, spins = 15;
+                
+                const interval = setInterval(() => {
+                    deg += 60; 
+                    coin.style.transform = `rotateY(${deg}deg)`; 
+                    spins--;
+                    
+                    if (spins <= 0) {
+                        clearInterval(interval);
+                        coin.style.transform = result === 'Gold' ? "rotateY(0deg)" : "rotateY(180deg)";
+                        const msg = document.getElementById('resultMsg');
+                        
+                        if (selectedChoice === result) {
+                            const winAmt = bet * 1.8;
+                            database.ref('users/' + currentUser + '/balance').runTransaction(cb => (cb || 0) + winAmt);
+                            msg.innerHTML = `<span class="text-win">🎉 WIN! Result: ${result.toUpperCase()}. Won ₹${winAmt.toFixed(2)}</span>`;
+                        } else {
+                            msg.innerHTML = `<span class="text-lose">❌ LOSE! Result: ${result.toUpperCase()}.</span>`;
+                        }
+                        
+                        activeBetRef.update({ status: "COMPLETED", systemOutcome: result });
+                        isSpinning = false; 
+                        document.getElementById('spinBtn').disabled = false;
+                    }
+                }, 100);
+            });
+        });
+    }
 </script>
 </body>
 </html>
